@@ -1,0 +1,66 @@
+﻿@using JobPortal.Core
+@inherits MvcContrib.FluentHtml.ModelWebViewPage<JobPortal.Web.CandidateSearchModel>
+
+<div id="LefttoRight" style="padding-top: 15px;">
+                            <table class="tbtitle">
+                                <tr>
+                                    <td><h4>&nbsp;&nbsp;  &nbsp;&nbsp;Candidate found</h4></td>
+                                </tr>
+                            </table>
+                        
+                            <table class="table table-striped table-hover" style="font-size: 14px">
+                                <tbody>
+                                    @foreach (CandidatePersonal candidate in Model.PersonalList)
+                                       {
+                                         <tr onclick =" javascript:$.post('@Url.Action("CandidateDetail", "CandidateSearch", new { Area = "Employer" })'); ">
+                                            <td class="span10">
+                                                <div>
+                                                         <h5><i class="icon-user"></i>@Html.ActionLink(candidate.Fname, "CandidateDetail", new { id = candidate.MainUser.Mid }) &nbsp; 
+                                                         <small><i class="icon-share"></i> @candidate.Email</small>
+                                                       
+                                                        <small><strong>Age &nbsp;</strong>@candidate.Age.ToString(1,false)</small> &nbsp;
+                                                        <small><strong>Birth Date &nbsp;</strong>@candidate.DateOfBirth.GetValueOrDefault().ToShortDateString()</small>&nbsp;
+                                                        <small><strong>Gender&nbsp;</strong>@candidate.Gender</small>&nbsp;                               
+                                                      </h5> 
+                                                    
+                                                </div>
+                                                <div>
+                                                     <p class="span2">@candidate.City,@candidate.Country</p>
+                                                     <p class="span2"><i class="icon-user"></i>@candidate.ContactNo</p>
+                                                     
+                                                        
+                                                </div>
+                                            </td>
+                                             <td>
+                                                <div>
+                                                    <p class="span3">
+                                                       <small>Created:<em>@if (candidate.CreatedOn != null)
+                                                                             {
+                                                                                @candidate.CreatedOn.Value.ToString("dd-MMM-yyyy")
+                                                                             }
+
+                                                        
+                                                                        </em>
+                                                       </small>
+                                                    </p>
+                                               </div>
+                                         <div>
+                                            <p class="span3">
+                                                <small>Update:<em>@if (candidate.UpdatedOn != null)
+                                                                  {
+                                                                      @candidate.UpdatedOn.Value.ToString("dd-MMM-yyyy")
+                                                                  }
+                                                              </em>
+                                                </small>
+                                          </p>
+                                       </div>
+                                    </td>
+                                 </tr>
+                              }
+                        </tbody>
+                    </table>
+                
+                            <div class="pagination">
+                                @Html.Partial("Paging",Model)
+                            </div>
+   </div

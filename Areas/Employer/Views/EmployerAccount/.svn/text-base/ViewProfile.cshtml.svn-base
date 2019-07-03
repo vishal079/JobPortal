@@ -1,0 +1,80 @@
+﻿@inherits MvcContrib.FluentHtml.ModelWebViewPage<JobPortal.Areas.Employer.Models.EmployerVM>
+
+<div id="cv">
+<div class="cv_experience" >
+    
+    <table class="tb_experience" border="0">
+        <tr><td colspan="2"><h4 style="color: orange">Experience Detail</h4></td> </tr>  
+       
+       @foreach(var data in Model.Experiences)
+       {
+            
+            <tr>
+                <td style="width:200px; font-size: 12px "><strong> Experience :</strong></td>
+                <td>@data.FreExperience</td>
+            </tr>
+            if(data.FreExperience == "Experience")
+            {
+               <tr>
+                   <td style="font-size: 12px "><strong> Job Title :</strong></td>
+                   <td>@data.JobTitle </td>
+               </tr>
+               <tr>
+                   <td style="font-size: 12px "><strong>Experience Year</strong></td>
+                   <td>@data.ExpYear (year) @data.ExpMonth (month)</td>   
+               </tr>
+               <tr>
+                   <td style="font-size: 12px "><strong>Annual Salary</strong></td>
+                   <td> @data.AnnualSalary</td>
+               </tr>
+            }
+           <tr>
+                   <td style="font-size: 12px "><strong>Functional Area</strong><hr/></td>
+                    <td>@data.FunctionalArea <hr/> </td>
+           </tr>
+              
+       }
+</table>
+
+</div>
+<div class="cv_education">
+        <table class="tb_experience" border="0">
+           <tr><td colspan="2"><h4 style="color: orange">Education Detail</h4></td> </tr>  
+            @foreach(var edu in Model.Educations)
+            {
+                <tr>
+                    <td style="width:200px ;font-size: 12px"><strong>Qualification Level</strong></td>
+                    <td>@edu.QualificationLevel</td>
+                </tr>
+                <tr>
+                    <td style="font-size: 12px "><strong>EducationSpecification</strong></td>
+                    <td>@edu.EducationSpecification</td>
+                </tr>
+                <tr>
+                    <td style="font-size: 12px "><strong>Passing Year</strong><hr/></td>
+                    <td> @edu.PassingYear<hr/></td>
+                </tr>
+            }
+        </table>
+
+    </div>
+    
+    <div class="cv_skill">
+         <table class="tb_experience" border="0">
+             <tr><td colspan="2"><h4 style="color: orange">Skill Detail</h4></td> </tr>    
+            @foreach(var skill in Model.Skills)
+            {
+                <tr><td style="width:200px; font-size: 12px " ><strong>SkillTerm</strong></td>
+                    <td>@skill.SkillTerm</td>
+                </tr>
+                <tr> <td style="font-size: 12px"><strong>Skill Experience</strong><hr/></td>
+                    <td>@skill.ExpYear (year) @skill.ExpMonth (month)<hr/></td>
+                </tr>
+           }
+        </table>
+    </div>
+</div>                
+
+
+
+    

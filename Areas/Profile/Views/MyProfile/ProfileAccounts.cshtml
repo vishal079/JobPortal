@@ -1,0 +1,95 @@
+﻿@using JobPortal.Core
+@using MvcContrib.FluentHtml
+@model JobPortal.Web.Areas.Profile.Models.ProfileResume
+
+@{
+
+
+    ViewBag.Title = "ProfileAccounts";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+   
+    Html.EnableUnobtrusiveJavaScript(false);  
+}
+<script>
+    function changediv() {
+        $('#div1').hide();
+    }
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        BindSpinner();
+    });
+
+    function BindSpinner() {
+        $("#div_loading").bind("ajaxSend", function () {
+            $(this).show();
+        }).bind("ajaxStop", function () {
+            $(this).hide();
+        }).bind("ajaxError", function () {
+            $(this).hide();
+        });
+    };
+
+    $(function() {
+        $('#aaaa').click(function() {
+            alert("hii");
+        });
+    });
+    function showtitle()
+    {
+        var s = document.getElementById("aaaa").value;
+        
+        CallAjax(s);
+    }
+
+    function CallAjax(s) {
+        $.ajax({
+            url: '@Url.Action("ShowMsg", "MyMessage",new {Area = "Profile",Controller="MyMessage"})',
+      type: "POST",
+      data: { 'title': s },
+      success: function (result) {
+          $('#AllToMsg').html(result);
+          $("#divclass").slideDown();
+      }
+       
+  });
+    }
+    </script>
+
+<div id="content">
+  
+    <div id="LefttoRight"> 
+        
+            <div class="employerHeader employerFont  Post-Padding" >   
+                <h3>Change Profile</h3>
+            </div>
+        <div class="section1 " >
+            <ul>
+                <li class="li1">
+                   <a href="@Url.Action("RegisterProfile","MyProfile")"> MY PROFILE  </a>
+                </li>
+                <li class="li1">
+                   
+                    @Ajax.ActionLink("MATCHED JOB","MatchJob","MyProfile",null,new AjaxOptions(){  InsertionMode = InsertionMode.Replace,UpdateTargetId = "div",HttpMethod ="GET",LoadingElementId = "div_loading"})
+                </li>
+                <li class="li1">
+                    @Ajax.ActionLink("APPLIED JOB","ApplyMatchJob","MyProfile",null,new AjaxOptions(){  InsertionMode = InsertionMode.Replace,UpdateTargetId = "div",HttpMethod ="GET",LoadingElementId = "div_loading"})
+                </li>
+                <li class="li1">
+                    @*@Ajax.ActionLink("MESSAGE","Index","MyMessage",new{area="Profile",Controller="MyMessage"},new AjaxOptions(){ InsertionMode = InsertionMode.Replace,UpdateTargetId = "div",HttpMethod ="GET"} )*@
+                      @Ajax.ActionLink("MESSAGE","Index","MyMessage",null,new AjaxOptions(){  InsertionMode = InsertionMode.Replace,UpdateTargetId = "div",HttpMethod ="GET",LoadingElementId = "div_loading"})
+                </li>
+            </ul>
+        </div>
+        <div id="div" class="section2" >
+                
+            <div id="div_loading" style="display:none;">
+                    <img src="@Url.Content("~/Content/themes/base/images/anim_loading.gif")" alt="" />
+            </div>
+            @Html.Partial("MatchJob", Model)
+       </div>
+            
+                
+           </div>
+  </div>
+    

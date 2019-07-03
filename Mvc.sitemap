@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<mvcSiteMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-3.0"
+            xsi:schemaLocation="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-3.0 MvcSiteMapSchema.xsd"
+            enableLocalization="true">
+
+    <mvcSiteMapNode title="JobPortal" controller="Home" action="Index">
+        <mvcSiteMapNode area="Job" title="SearchJob" controller="JobSearch" action="Index">
+        <mvcSiteMapNode area="Job" title="JobDetailDescription" controller="JobSearch" action="JobDetail"/>
+           <!--<mvcSiteMapNode area="Candidate" title="Multiple Add" controller="Home" action="AddMultiple"/>-->
+        </mvcSiteMapNode>
+        <!--<mvcSiteMapNode area="Job" title="JobDetail" controller="JobSearch" action="JobDetail"/>
+        <mvcSiteMapNode area="Contact" title="Contact" controller="Home" action="Index"/>
+        <mvcSiteMapNode area="Status" title="Status" controller="Home" action="Index"/>-->
+    </mvcSiteMapNode>
+</mvcSiteMap>

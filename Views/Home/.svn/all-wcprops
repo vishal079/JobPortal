@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/JobPortal/!svn/ver/2/trunk/JobPortal/Views/Home
+END
+Index.cshtml
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/JobPortal/!svn/ver/77/trunk/JobPortal/Views/Home/Index.cshtml
+END
+Login.cshtml
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/JobPortal/!svn/ver/77/trunk/JobPortal/Views/Home/Login.cshtml
+END
+RegisterUser.cshtml
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/JobPortal/!svn/ver/77/trunk/JobPortal/Views/Home/RegisterUser.cshtml
+END

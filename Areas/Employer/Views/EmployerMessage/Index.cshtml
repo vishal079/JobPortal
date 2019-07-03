@@ -1,0 +1,77 @@
+﻿@inherits MvcContrib.FluentHtml.ModelWebViewPage<JobPortal.Areas.Employer.Models.EmployerVM>
+
+@{
+    Layout = "../../../../Views/Shared/_Layout.cshtml";
+}
+
+<html>
+    <head>
+        <title>Personal Message</title>
+        <script type="text/javascript">
+            function Display(id) {
+                //var i = 0;
+                //$('table > tbody').each(function () {
+                //    i++;
+                //    $('table > tbody > tr:gt(' + (2) + ')').next.slideDown();
+                //    alert("ok that is done" + i +id);
+                //});
+                $("#divclass").slideDown();
+                $("#icon").show();
+            }
+            function disp(id) {
+                $("#divclass").slideUp();
+                $("#icon").hide();
+            }
+        </script>
+    </head>
+    <body>
+        <div id="content" class="">
+            <div class="form-inline">
+                @Html.Partial("Header")
+            </div>
+            <h4 class="Small-Post-Padding">Messages</h4>
+            <div class="MessageLeftside Small-Post-Padding" style="width: 430px;margin-left: 5px;">
+                <table class="table table-striped"style="width: 420px">
+                    @{
+                        int i = 0;
+                        foreach (var msg in Model.MsgTitle)
+                        {
+                            i++;
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        @Ajax.ActionLink("" + @msg, "DisplayMsg", "EmployerMessage", new {title = msg}, new AjaxOptions
+                                                                                                                            {
+                                                                                                                                UpdateTargetId = "AllMsg",
+                                                                                                                                HttpMethod = "POST",
+                                                                                                                                OnSuccess = "Display('"+@i+"')"
+                                                                                                                            })
+                                        <i class="icon-upload" style="display: none" onclick="disp(@i)" id="icon"></i>
+                                        <div style="display: none" id="divclass">
+                                            @Html.Partial("DisplayMsg")
+                                        </div>
+                                    </td>
+                                    @*<td>
+                                        <i class="icon-upload" style="display: none" onclick="disp(@i)" id="icon"></i>
+                                    </td>*@
+                                </tr>
+                            </tbody>
+                                @*<tbody>
+                            <tr style="display: none" id="divclass">
+                                <td colspan="2">
+                                    @Html.Partial("DisplayMsg")</td>
+                            </tr></tbody>*@
+                        }
+                    }
+                </table>
+            </div>
+            <div class="MessageRightside Small-Post-Padding">
+                <h4>Detail Discussion</h4>
+                @Html.Partial("DisplayDisscuss")
+            </div>
+            <div class="info">
+            </div>
+        </div>
+    </body>
+</html>
+

@@ -1,0 +1,222 @@
+﻿
+@using JobPortal.Core
+@model JobPortal.Core.CandidatePersonal
+@{
+    ViewBag.Title = "CandidateProfileDetail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<html>
+    <head>
+       @*<link href="../../../../Content/candi_detail.css" rel="stylesheet" />
+        <link href="../../../../Content/emp.css" rel="stylesheet" />*@
+        <link href="../../../../Content/style.css" rel="stylesheet" />
+        <link href="../../../../Content/bootstrap.css" rel="stylesheet" />
+    </head>
+<body class="">
+        <div id="content">
+            <div id="jobs-content">
+                <div class="candidate-search">
+                    <div class="scaffold">
+                        <div class="search-form">
+                            <h2 style="color: tomato" align="center">CANDIDATE PROFILE</h2>
+                        </div>
+                    
+                    </div>
+                    <div class="jobrequirment"   >
+                        <div class="job_headmidleft"></div>
+                        <div class="jobrequirment1" > Personal Detail</div>
+                        <div  class="job_headmidright" ></div>
+                        <div class="jobrequirment2" >
+                            @foreach(CandidatePersonal p in Model.CandidateList)
+                            {
+                                <ul class="jobrequirment_bottom_mid2" >
+                           
+                                    <li class="jobrequirment_bottom_mid1">
+                                        <strong>NAME:    </strong>
+                                        <i> @p.Fname &nbsp;  </i>
+                                    </li>
+                                    
+                                     <li class="jobrequirment_bottom_mid1">
+                                        <strong>E-Mail:    </strong>
+                                        <i>   @p.Email </i>
+                                    </li>
+
+                                    <li class="jobrequirment_bottom_mid1">
+                                        <strong> CONTACT NO:    </strong>
+                                        <i > @p.ContactNo    </i>
+                                    </li>
+                                
+                                
+                                    <li class="jobrequirment_bottom_mid1">
+                                        <strong>CURRENT LOCATION:    </strong>
+                                        <i > @p.City,@p.Country   </i>
+                                    </li>
+                                    <li class="jobrequirment_bottom_mid1">
+                                        <strong>GENDER:    </strong>
+                                        <i>@p.Gender</i>
+                                    </li>
+                                
+                           
+                           
+                                </ul>
+                            }
+                            <div class="clear"></div>
+                        </div>
+                        <div class="jobrequirment_bottom">
+                            <div class="jobrequirment_bottom_left"></div>
+                            <div class="jobrequirment_bottom_mid"></div>
+                            <div class="jobrequirment_bottom_right"></div>
+                        </div>
+                              
+       
+
+                    </div>
+                
+                    @*work experience*@
+                    <div class="jobrequirment"   >
+                        <div class="job_headmidleft"></div>
+                        <div class="jobrequirment1">Work Experience</div>
+                        <div  class="job_headmidright"></div>
+                        <div class="jobrequirment2">
+                            @foreach(Experience p1 in Model.ExperienceList)
+                            {
+                                <ul class="jobrequirment_bottom_mid2" >
+                           
+                                    <li class="jobrequirment_bottom_mid1">
+                                        <strong>Fresher/Experience:    </strong>
+                                        <i> @p1.FreExperience  </i>
+                                    </li>
+                                
+                                    <li class="jobrequirment_bottom_mid1">
+                                        <strong>Job Title:    </strong>
+                                        <i> @p1.JobTitle  </i>
+                                    </li>
+                                
+
+                                    <li class="jobrequirment_bottom_mid1">
+                                        <strong> Experience:    </strong>
+                                        <i > @p1.ExpYear &nbsp; Year &nbsp; @p1.ExpMonth &nbsp; Month </i>
+                                     
+                                    </li>
+                                 
+                                
+                                    <li class="jobrequirment_bottom_mid1">
+                                        <strong>CURRENT SALARY:    </strong>
+                                        <i > @p1.AnnualSalary </i>
+                                    </li>
+                                
+
+                                    <li class="jobrequirment_bottom_mid1">
+                                        <strong>Functional  Area:    </strong>
+                                        <i>@p1.FunctionalArea</i>
+                                    </li>
+                                </ul>
+                            
+                            }
+                            <div class="clear"></div>
+                        </div>
+                        <div class="jobrequirment_bottom">
+                            <div class="jobrequirment_bottom_left"></div>
+                            <div class="jobrequirment_bottom_mid"></div>
+                            <div class="jobrequirment_bottom_right"></div>
+                        </div>
+                              
+       
+
+                    </div>
+                    @*education*@
+                
+                    <div class="jobrequirment" >
+                        <div class="job_headmidleft"></div>
+                        <div class="jobrequirment1"> Education Detail</div>
+                        <div  class="job_headmidright"></div>
+                        <div class="jobrequirment2">
+                            @foreach(Education p2 in Model.EducationList)
+                            {
+                                <ul class="jobrequirment_bottom_mid2" >
+                           
+                                    <li class="jobrequirment_bottom_mid1">
+                                        <strong>Qualification Level:    </strong>
+                                        <i> @p2.QualificationLevel</i>
+                                    </li>
+                                
+                                    <li class="jobrequirment_bottom_mid1">
+                                        <strong>Education Specification  </strong>
+                                        <i> @p2.EducationSpecification  </i>
+                                    </li>
+                                
+
+                                    <li class="jobrequirment_bottom_mid1">
+                                        <strong> Passing Year :    </strong>
+                                        <i > @p2.PassingYear    </i>
+                                    </li>    
+                                </ul>     
+                            }
+                            <div class="clear"></div>
+                        </div>
+                        <div class="jobrequirment_bottom">
+                            <div class="jobrequirment_bottom_left"></div>
+                            <div class="jobrequirment_bottom_mid"></div>
+                            <div class="jobrequirment_bottom_right"></div>
+                        </div>
+                              
+       
+
+                    </div>
+                    @*skill detail*@
+                
+                    <div class="jobrequirment"  >
+                        <div class="job_headmidleft"></div>
+                        <div class="jobrequirment1"> Skill Detail</div>
+                        <div  class="job_headmidright"></div>
+                        <div class="jobrequirment2">
+                            @foreach(Skill p3 in Model.SkillList)
+                            {
+                                <ul class="jobrequirment_bottom_mid2" >
+                           
+                                    <li class="jobrequirment_bottom_mid1">
+                                        <strong>Skill:    </strong>
+                                        <i> @p3.SkillTerm</i>
+                                    </li>
+                                
+                                    <li class="jobrequirment_bottom_mid1">
+                                        <strong>Experience</strong>
+                                        <i> @p3.ExpYear &nbsp; Year &nbsp;  @p3.ExpMonth &nbsp; Month  </i>
+                                     
+                                    </li>
+                                
+
+                                </ul>     
+                            }
+                            <div class="clear"></div>
+                        </div>
+                        <div class="jobrequirment_bottom">
+                            <div class="jobrequirment_bottom_left"></div>
+                            <div class="jobrequirment_bottom_mid"></div>
+                            <div class="jobrequirment_bottom_right"></div>
+                        </div>
+                              
+       
+
+                    </div>
+                    <div class="jobrequirment" style="padding-bottom: 20px;">
+                        <div class="btncenter" >
+                        
+                            @Html.ActionLink("Save Resume","CandidateDetail","CandidateSearch",new {@class="btn btn-primary"})
+                        
+                            @Html.ActionLink("Back To ALL Candidate","CandidateProfileList","Admin",new{@class="btn btn-primary"})
+                        </div>
+                    </div>
+                
+                
+                </div>
+            </div>
+            <div id="info"></div>
+    </div>
+</body>
+</html>
+
+
+
+
+

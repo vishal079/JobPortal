@@ -1,0 +1,107 @@
+﻿
+@using JobPortal.Web
+@inherits MvcContrib.FluentHtml.ModelWebViewPage<JobPortal.Areas.Employer.Models.EmployerVM>
+
+@{
+    Layout = "../../../../Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Index</title>
+</head>
+<body>
+    <div id="content" style="background: lightgray">
+        @Html.RenderMessages()
+        @Html.Partial("Header")
+        <div class="employerblock  Small-Post-Padding" style="width: 908px">
+            @*@{
+                var grid = new WebGrid(Model.Jobs, canPage: true, rowsPerPage: 3);
+                grid.Pager(WebGridPagerModes.NextPrevious);
+
+    @grid.GetHtml(tableStyle: "webGrid",
+                  htmlAttributes: new {id = "DataTable",@class ="table"},
+                  headerStyle: "header",
+                  
+                  alternatingRowStyle: "alt",
+                  columns: grid.Columns(grid.Column("JobTitle"),
+                                        grid.Column("Country"),
+                                        grid.Column("PostedTime"),
+                                        grid.Column("EmpId")
+                    ));
+             }*@
+            @using(Html.BeginForm("DeleteMarkAll","EmployerAccount",FormMethod.Post))
+            {
+                <table border="0" class="table table-bordered" style="width: 900px" >
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td class="Small-Post-Padding tbcity">
+                            JobTitle
+                        </td>
+                        <td class="Small-Post-Padding">
+                            Country
+                        </td>
+                        <td class="Small-Post-Padding">
+                            PostedTime
+                        </td>
+                        @*<td class="Small-Post-Padding">
+                        JobId
+                    </td>*@
+                        <td class="Small-Post-Padding" colspan="2">
+                            Applied Candidate
+                        </td>
+                        <td class="Small-Post-Padding" colspan="2">
+                            Edit/Delete
+                        </td>
+                    </tr>
+                    @foreach (var test in Model.Jobs)
+                    {
+                        <tr>
+                            <td style="width: 3px">
+                                <input type="checkbox" name="check" value="false"/>
+                            </td>
+                            <td class="Small-Post-Padding">@test.JobTitle</td>
+                            <td class="Small-Post-Padding">@test.Country</td>
+                            <td class="Small-Post-Padding" style="width: 110px">C
+                                @if (test.PostedTime != null)
+                                {
+                                    @test.PostedTime.Value.ToString("dd-MMM-yyyy")
+                                }
+                                &nbsp;U
+                                @if (test.PostedTime != null)
+                                {
+                                    @test.PostedTime.Value.ToString("dd-MMM-yyyy")
+                                }
+                            </td>
+                            <td class="Small-Post-Padding" style="font-weight: bold; font-size: medium; color: orangered">
+                                @{ int availableCandidate = Model.OApplayJobs.Count(t => t.JobId.Id == test.Id); }
+                                @availableCandidate
+                                @*@test.Id*@
+                            </td>
+                            <td style="width: 110px">
+                                <p>
+                                    @*@{
+                                    int availableCandidate = Model.OApplayJobs.Count(t => t.JobId.Id == test.Id);
+                                }
+                                @availableCandidate*@
+                                    <a href="@Url.Action("ViewAll", "EmployerAccount", new {pJobId = @test.Id})" class="btn btn-small btn-success"><i class="icon-search"></i> ViewAll </a></p>
+                            </td>
+                            <td class="Small-Post-Padding">
+                                <a href="#" class="btn btn-small btn-info"><i class="icon-edit"></i></a>
+                            </td>
+                            <td>
+                                <a href="#" class="btn btn-small btn-danger"><i class="icon-remove"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </table>
+                <input type="submit" class="btn btn-danger" value="DeleteMarked"/>
+            }
+        </div>
+        <div id="info">
+        </div>
+    </div>
+</body>
+</html>

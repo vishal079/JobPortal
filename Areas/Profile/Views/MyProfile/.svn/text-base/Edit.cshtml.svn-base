@@ -1,0 +1,201 @@
+﻿@using JobPortal.Core
+@using MvcContrib.FluentHtml
+@model JobPortal.Web.Areas.Profile.Models.ProfileResume
+@{
+    
+    ExpYearList eyl = new ExpYearList();
+    
+    Html.EnableUnobtrusiveJavaScript(true);
+    HtmlHelper.ClientValidationEnabled = true;
+}
+@*<style>
+ #Experience
+{
+      display:none
+}
+</style>*@
+<script>
+    $(document).ready(function () {
+        $("#Experienced").click(function ()
+        {
+            alert("expe1");
+            $("#Experience").slideDown("fast");
+            alert("expe2");
+
+        });
+        $("#Freshered").click(function ()
+        {
+           $("#Experience").slideUp("fast");
+        });
+
+    });
+</script>
+<script>
+    
+    $('#frmName').removeData("validator");
+    $('#frmName').removeData("unobtrusiveValidation");
+    $.validator.unobtrusive.parse('#frmName');
+</script>
+@if (Model.EditCandidate != null)
+{
+    using (Html.BeginForm("Edit", "MyProfile", FormMethod.Post, new { Area = "Profile", id="frmName" }))
+    {
+        
+        <div class="span5">
+            @Html.HiddenFor(m => m.EditCandidate.Id)
+            @Html.HiddenFor(m => m.EditCandidate.MainUser.Mid)
+
+            @Html.TextBoxFor(m => m.EditCandidate.Fname, new { @class ="span3", @placeholder = "Name" }) @*.Class("span2").Placeholder("Name")*@
+            @Html.ValidationMessageFor(m => m.EditCandidate.Fname)
+
+            @Html.TextBoxFor(m => m.EditCandidate.Email, new { @class ="span3", @placeholder = "Email" }) @*.Class("span3").Placeholder("Email")*@
+            @Html.ValidationMessageFor(m => m.EditCandidate.Email)
+
+            @Html.TextBoxFor(m => m.EditCandidate.ContactNo, new { @class ="span3", @placeholder = "Contact no" }) @*.Class("span2").Placeholder("Contact no")*@
+            @Html.ValidationMessageFor(m => m.EditCandidate.ContactNo) 
+
+            @Html.TextBoxFor(m => m.EditCandidate.DateOfBirth, new { @placeholder ="DOB", @class = "span3" }) @*.Format("MM/dd/yyyy").Class("span3").Attr("data-mask", "99/99/9999").Placeholder("DOB")  *@
+            @Html.ValidationMessageFor(m => m.EditCandidate.DateOfBirth)
+
+            @Html.TextBoxFor(m => m.EditCandidate.City, new { @class ="span3", @placeholder = "city" }) @*.Class("span2").Placeholder("city")*@
+            @Html.ValidationMessageFor(m => m.EditCandidate.City)
+
+            @Html.TextBoxFor(m => m.EditCandidate.Country, new { @class ="span3", @placeholder = "country" }) @*.Class("span2").Placeholder("country")    *@
+            @Html.ValidationMessageFor(m => m.EditCandidate.Country)
+
+        <div class="form-inline" >
+            
+            <label class=" radio" >
+                Male  @Html.RadioButtonFor(m => m.EditCandidate.Gender, "Male", new { Checked = "checked" })
+            </label>
+            <label class="radio">
+                Female @Html.RadioButtonFor(m => m.EditCandidate.Gender, "Female")
+                                  
+            </label>
+        </div>
+        <div class="modal-footer">
+            
+            @this.SubmitButton("Save").Class("btn btn-primary")
+            @this.Button("Close").Class("btn").Attr("data-dismiss", "modal").Attr("aria-hidden", "true")
+
+        </div>
+    </div>
+    }
+}
+else if (Model.EditResume != null)
+{
+                 using (Html.BeginForm("Edit", "MyProfile", FormMethod.Post, new { Area = "Profile", enctype = "multipart/form-data",id="frmName" }))
+                 {
+                     <div class="span5">
+                         @Html.HiddenFor(m => m.EditResume.Rid)
+                         @Html.HiddenFor(m => m.EditResume.MainUser.Mid)
+ 
+                         @Html.TextBoxFor(m => m.EditResume.Photo, new {Type = "file"})
+                         @Html.ValidationMessageFor(m => m.EditResume.Photo)
+
+                    
+                          <div class="modal-footer">
+            
+                             @this.SubmitButton("Save").Class("btn btn-primary")
+                             @this.Button("Close").Class("btn").Attr("data-dismiss", "modal").Attr("aria-hidden", "true")
+                         </div>
+                   </div>
+                 }
+}
+else if (Model.EditExperience != null)
+{
+             using (Html.BeginForm("Edit", "MyProfile", FormMethod.Post, new { Area = "Profile",id="frmName" }))
+             {
+                 <div class="span5">
+                     @Html.HiddenFor(m => m.EditExperience.Eid)
+                     @Html.HiddenFor(m => m.EditExperience.MainUser.Mid)
+ 
+                     <div class="form-inline">
+                         <label class="radio" Id ="Freshered">
+                             Fresher: @Html.RadioButtonFor(m => m.EditExperience.FreExperience, "Fresher", new { Checked = "checked"})
+                         </label>
+                         <label class="radio" Id ="Experienced">
+                             Experience: @Html.RadioButtonFor(m => m.EditExperience.FreExperience, "Experience")
+                                  
+                         </label>
+                     </div>
+                     @if (Model.EditExperience.FreExperience =="Experience")
+                     {
+                         <style>
+                              #Experience
+                              {
+                                   display: initial;
+                              }
+                         </style>
+                     }
+                     <div id="Experience">
+
+                         @Html.TextBoxFor(m => m.EditExperience.JobTitle, new {@class = "span4", @placeholder = "Job Title"})  
+                         @Html.ValidationMessageFor(m=>m.EditExperience.JobTitle)
+
+                         @Html.DropDownListFor(m => m.EditExperience.ExpYear, new SelectList(eyl.GetExperience(), "value", "name"), "--Select Experience Year--", null)
+                         @Html.ValidationMessageFor(m=>m.EditExperience.ExpYear)
+
+                         @Html.DropDownListFor(m => m.EditExperience.ExpMonth, new SelectList(eyl.GetExpMonth(), "value", "name"), "--Select Experience Month--", null)
+                         @Html.ValidationMessageFor(m=>m.EditExperience.ExpMonth)
+
+                         @Html.DropDownListFor(m => m.EditExperience.AnnualSalary, new SelectList(eyl.GetAnnualSalary(), "value", "name"), "--Select salary--", null)  
+                         @Html.ValidationMessageFor(m=>m.EditExperience.AnnualSalary)
+
+                     </div>
+                         @Html.DropDownListFor(m => m.EditExperience.FunctionalArea, new SelectList(eyl.GetFucArea(), "value", "name"), "--Select Function Area--", null)             
+                         @Html.ValidationMessageFor(m=>m.EditExperience.FunctionalArea)
+   
+                     <div class="modal-footer">
+                         @this.SubmitButton("Save").Class("btn btn-primary")
+                         @this.Button("Close").Class("btn").Attr("data-dismiss", "modal").Attr("aria-hidden", "true")
+                    </div>
+                 </div>
+             }
+}
+else if (Model.EditEducation != null)
+{
+          using (Html.BeginForm("Edit", "MyProfile", FormMethod.Post, new { Area = "Profile",id="frmName" }))
+          {
+              <div class="span5">
+                  @Html.HiddenFor(m => m.EditEducation.Eid)
+                  @Html.HiddenFor(m => m.EditEducation.MainUser.Mid)
+                  @Html.DropDownListFor(m => m.EditEducation.QualificationLevel, new SelectList(eyl.GetQuaLevel(), "value", "name"), "--Select Qualification--", null)    
+                  @Html.ValidationMessageFor(m => m.EditEducation.QualificationLevel)
+
+                  @Html.DropDownListFor(m => m.EditEducation.EducationSpecification, new SelectList(eyl.GetEduSpe(), "value", "name"), "--Select Edu Specification --", null)  
+                  @Html.ValidationMessageFor(m => m.EditEducation.EducationSpecification)
+
+                  @Html.DropDownListFor(m => m.EditEducation.PassingYear, new SelectList(eyl.GetPassingYear(), "value", "name"), "--Select passing year--", null)  
+                  @Html.ValidationMessageFor(m => m.EditEducation.PassingYear)
+             
+              <div class="modal-footer">
+                  @this.SubmitButton("Save").Class("btn btn-primary")
+                  @this.Button("Close").Class("btn").Attr("data-dismiss", "modal").Attr("aria-hidden", "true")
+              </div>
+            </div>
+          }
+}
+else if (Model.EditSkill != null)
+{
+            using (Html.BeginForm("Edit", "MyProfile", FormMethod.Post, new { Area = "Profile", id="frmName" }))
+            {
+                <div class="span4">
+                 
+                    @Html.HiddenFor(m => m.EditSkill.Sid)
+                    @Html.HiddenFor(m => m.EditSkill.MainUser.Mid)
+
+                    @Html.TextBoxFor(m => m.EditSkill.SkillTerm, new {@class = "span3", @placeholder = "e.g.php,java,c..etc"})   
+                    @Html.ValidationMessageFor(m => m.EditSkill.SkillTerm)
+
+                    @Html.DropDownListFor(m => m.EditSkill.ExpYear, new SelectList(eyl.GetExperience(), "value", "name"), "--Select Exp Year ", null)
+                    @Html.DropDownListFor(m => m.EditSkill.ExpMonth, new SelectList(eyl.GetExpMonth(), "value", "name"), "--Select Exp Month ", null)
+                <div class="modal-footer">
+                 
+                  @this.SubmitButton("Save").Class("btn btn-primary")
+                  @this.Button("Close").Class("btn").Attr("data-dismiss", "modal").Attr("aria-hidden", "true")
+                
+                </div>  
+         </div>
+    }
+}         

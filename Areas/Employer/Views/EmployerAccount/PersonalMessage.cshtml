@@ -1,0 +1,116 @@
+﻿@inherits MvcContrib.FluentHtml.ModelWebViewPage<JobPortal.Areas.Employer.Models.EmployerVM>
+
+@*<table class="table">
+    <tr>
+        <td colspan="2">
+            Read Message
+        </td>
+    </tr>
+    <tr>
+        <td><i>user</i></td>
+        <td><i>message</i></td>
+        <td><i>No.Replays</i></td>
+        <td><i>time</i></td>
+    </tr>
+    @foreach(var readmessages in Model.ReadMessages)
+    {
+        <tr>
+            <td>
+                @readmessages.Title
+            </td>
+            <td>
+                @readmessages.Replays
+            </td>
+            <td>
+                @readmessages.User2Name
+            </td>
+            <td>
+                @readmessages.CreatedTime
+            </td>
+        </tr>
+    }
+</table>
+
+<table class="table">
+    <tr>
+        <td colspan="2">
+            UnRead Message
+        </td>
+    </tr>
+    <tr>
+        <td><i>user</i></td>
+        <td><i>message</i></td>
+        <td><i>No.Replays</i></td>
+        <td><i>time</i></td>
+    </tr>
+    @foreach(var readmessages in Model.UnReadMessges)
+    {
+        <tr>
+            <td>
+                @readmessages.Title
+            </td>
+            <td>
+                @readmessages.Replays
+            </td>
+            <td>
+                @readmessages.User2Name
+            </td>
+            <td>
+                @readmessages.CreatedTime
+            </td>
+        </tr>
+    }
+</table>*@
+    @if (Model.PMs.Count != 0)
+    {
+        int countid2 = 0;
+         Model.PM.IsDiscussionAvailable = true;
+         <p class="tbcity">Jobtitle &nbsp; : &nbsp; @Model.ObjJob.JobTitle</p>
+         <table class="table table-bordered">
+             <tr>
+                 <td>User</td>
+                 <td>Message</td>
+                 <td>Time</td>
+             </tr>
+        
+             @foreach (var msg in Model.PMs)
+             {
+                 <tr>
+                     <td>
+                         @msg.User2Name
+                     </td>
+                     <td>
+                         @msg.Message
+                     </td>
+                     <td>
+                         @msg.CreatedTime
+                     </td>
+                 </tr>
+                 Model.PM.Id = msg.Id;
+                 countid2 = countid2 + 1;
+             }
+             @{
+
+                 Model.PM.Id2 = countid2;
+             }
+         </table>
+         @Html.HiddenFor(m => m.PM.IsDiscussionAvailable)
+         @Html.HiddenFor(m => m.PM.Id)
+         @Html.HiddenFor(m => m.PM.Id2)
+         @Html.HiddenFor(m => m.PM.JobId)
+         @Html.HiddenFor(m => m.PM.User2)
+         @Html.Label("Message")
+         @Html.TextAreaFor(m => m.PM.Message)
+     }
+     else
+     {
+         @Html.HiddenFor(m => m.PM.IsDiscussionAvailable)
+         @Html.HiddenFor(m => m.PM.User2)
+         @Html.HiddenFor(m => m.PM.JobId)
+         @Html.Label("Jobtitle")
+         @Html.TextBoxFor(m => m.PM.Title, new {disable = true})
+         @Html.Label("Recipient(Username)")
+         @Html.TextBoxFor(m => m.PM.User2Name, new {disable = true})
+         @Html.Label("Message")
+         @Html.TextAreaFor(m => m.PM.Message)
+     }

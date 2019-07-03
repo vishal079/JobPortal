@@ -1,0 +1,35 @@
+﻿@using MvcContrib.FluentHtml
+@using WebSupergoo.ABCpdf7
+
+@inherits ModelWebViewPage<JobPortal.Areas.Employer.Models.EmployerVM>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>DisplayResume</title>
+</head>
+<body>
+    <div>
+        @*<img src="@Url.Action("GetResume", "EmployerAccount")" alt="Product Image" />*@
+        @*@Model.Resume.FileName*@
+        @this.TextArea(m=>m.Resume.FileName).Class("textareasize")
+        @*@Url.Action("GetImage","EmployerAccount")
+        @Html.Action("GetImage","EmployerAccount")*@
+        @*<embed src="@Url.Action("GetImage","EmployerAccount")"/>*@
+        @{
+            //var doc = new Doc();
+            //var xReadOptions = new XReadOptions();
+            //xReadOptions.FileExtension = "doc";
+            //xReadOptions.ReadModule = ReadModuleType.OpenOffice;
+            //xReadOptions.ReadModule = ReadModuleType.Pdf;
+            //doc.Read(Model.Resume.image, xReadOptions);
+            //doc.Save("Output.pdf");
+        }
+    </div>
+</body>
+</html>

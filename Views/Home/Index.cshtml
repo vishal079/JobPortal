@@ -1,0 +1,159 @@
+﻿<!--Index File run as home page-->
+
+@inherits MvcContrib.FluentHtml.ModelWebViewPage<JobPortal.Areas.Job.Models.JobSearchVM>
+@{
+    ViewBag.Title = "JobPortal";
+    Layout = "../Shared/_Layout.cshtml";
+    ViewBag.count = 0;
+    ViewBag.p_index = 0;
+}
+<html>
+<head>
+    <title>Index</title>
+</head>
+<body>
+    <div id="content" class="container">
+        <div class="search">
+            @using (Html.BeginForm("Index", "JobSearch", new { area = "job", controller = "JobSearch" }, FormMethod.Post))
+            {
+                <div class="searchBox">
+                    @*<img src=@Url.Content("../../Content/themes/base/images/title.gif")  width="90" height="30" style="padding-top: 22px" />*@
+                    <div class="span4">
+                        <div style="float: left; vertical-align: top">
+                            @Html.Label("What")
+                        </div>
+                        <div style="float: left; margin-left: 5px;">
+                            @Html.TextBoxFor(model => model.Job.KeyTerm, new { placeholder = ViewBag.what, @class = "input-xlarge" })
+                            @*search-query form-control*@
+                        </div>
+                    </div>
+                    <div class="span5" style="float: right">
+                        <div style="float: left; vertical-align:top">
+                            @Html.Label("Where")
+                        </div>
+                        <div style="float: left; margin-left: 5px;">
+                            @Html.TextBoxFor(model => model.Job.Country, new { placeholder = ViewBag.where, @class = "input-xlarge" })
+                            <input type="submit" value="Search" class="btn btn-info" style="margin: 0px 0 10px 5px;" />
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                </div>
+                <div class="searchBox" style="margin-bottom: 1%;">
+                    <div class="form-inline" style="margin-left: 20px;">
+                        <label class="text-success">
+                            Keyterms :
+                            @*@foreach(var keyterm in Model.BasicSearches)
+                                {
+                                    @Html.ActionLink(""+keyterm.KeyTerm,"SearchOnKeyterm",new {area="Job",Controller="JobSearch",id = keyterm.KeyTerm},new{@class = "btn-small btn-link"})
+                                    <html>&nbsp;</html>
+                                }*@
+                            &nbsp;<a href="#">Java</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">android</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">c</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">c++</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">Jquery</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">css</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">Python</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">Asp.net</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#">PHP</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">Perl</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </label>
+                    </div>
+                    <div class="form-inline" style="margin-left: 20px;">
+                        <label class="text-success">Country &nbsp;&nbsp; :&nbsp;<a href="#">india</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">japan</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">USA</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">London</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">Australiya</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">England</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">Franch</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label>
+
+                        @*   @foreach(var keyterm in Model.BasicSearches)
+                            {
+                                @Html.ActionLink(""+keyterm.KeyTerm,"SearchOnKeyterm",new {area="Job",Controller="JobSearch",id = keyterm.KeyTerm},new{@class = "btn-small btn-link"})
+                                <html>&nbsp;</html>
+                            }*@
+                    </div>
+                    <div class="form-inline" style="margin-left: 20px;">
+                        <label class="text-success"><b>Company :</b>&nbsp;<a href="#">Version</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">amultek</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">Tcs</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">Infosys</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">Ipath</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">RightClcik</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">Realiance</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                        @*      @foreach(var keyterm in Model.BasicSearches)
+                            {
+                                @Html.ActionLink(""+keyterm.KeyTerm,"SearchOnKeyterm",new {area="Job",Controller="JobSearch",id = keyterm.KeyTerm},new{@class = "btn-small btn-link"})
+                                <html>&nbsp;</html>
+                            }*@
+                    </div>
+                </div>
+            }
+        </div>
+        <div id="blocks">
+            <div class="block">
+                <div class="HeadingFont">
+                    Feature Job
+                    <hr />
+                </div>
+                <div style="display: inline-table;">
+                    @{
+                        int i = 0;
+                        string side = "left";
+                        foreach (var job in Model.Jobs)
+                        {
+                            if (job.Status == false)
+                            {
+                                if (i <= 7)
+                                {
+                                    <div class="BlockFutureJobs">
+                                        @**@
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <a href="#">@job.JobTitle</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="height: 4px;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tbcity">
+                                                @job.Country
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tbdiscription">
+                                                @job.KeyTerm
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                }
+                                i++;
+                            }
+                        }
+                    }
+                </div>
+            </div>
+            <br />
+            <h5>@Html.ActionLink("More Jobs...", "Index", new { area = "Job", Controller = "JobSearch" })</h5>
+        </div>
+        <div id="blockRights" style="height: 400px">
+            <div class="blockRight">
+                <div class="HeadingFont">
+                    Job Seekers
+                    <hr />
+                    <ul class="tbcity">
+                        <li>Get Found</li>
+                        <li>Apply Seamlessly</li>
+                        <li>Be Awesome</li>
+                    </ul>
+                </div>
+                @Html.ActionLink("Create Profile", "Profile", new { area = "Search", Controller = "JobSearch" }, new { @class = "btn btn-success" })
+                <br />
+                <br />
+                <div class="HeadingFont">
+                    Employers
+                    <hr />
+                    <p class="tbcity">Reach top talent from the top teach community reach</p>
+                    <br />
+                    @Html.ActionLink("Post a Job", "JobPost", new { area = "Job", Controller = "JobPost" }, new { @class = "btn btn-primary" })
+
+                    <a class="btn btn-primary" href="#">Search candidate</a>
+                </div>
+            </div>
+        </div>
+        <div id="LefttoRight">
+            <div class="LeftRight">
+            </div>
+        </div>
+        <div id="info">
+        </div>
+    </div>
+</body>
+</html>

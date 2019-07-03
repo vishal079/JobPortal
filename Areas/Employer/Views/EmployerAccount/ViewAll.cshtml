@@ -1,0 +1,208 @@
+﻿@using MvcContrib.FluentHtml
+@inherits ModelWebViewPage<JobPortal.Areas.Employer.Models.EmployerVM>
+@{
+    Layout = "../../../../Views/Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ViewAll</title>
+    </head>
+    <body>
+        <div id="contentEmp">
+            @Html.Partial("Header")
+            @using(Html.BeginForm("SendMailtoAll","EmployerAccount",FormMethod.Post))
+            {
+                <div class="employerblock Post-Padding" style="width: 900px">
+                    <table class="table table-bordered" style="width: 880px">
+                        <tr>
+                            <td>    #               </td>
+                            @*<td>  Image           </td>*@
+                            <td>    Candidate name  </td>
+                            <td>    Contect No      </td>
+                            <td>    Email           </td>
+                            <td>    Location        </td>
+                        </tr>
+                        @{
+                            int i = 0;
+                            foreach (var listofcandidate in Model.ResumeList)
+                            {
+                                i = i + 1;
+                                <tr>
+                                    <td>    @i  </td>
+                                    @*<td rowspan="2">
+                                            <img src="@Url.Content("../../../../Content/themes/base/images/145.jpg")" style="width: 80px;height: 120px"/>
+                                                    </td>*@
+                                    <td>    @listofcandidate.user.UserName      </td>
+                                    <td>    @listofcandidate.user.Contect       </td>
+                                    <td>    @listofcandidate.user.Email         </td>
+                                    <td>    @listofcandidate.user.Location      </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input id="@listofcandidate.user.CandidateId.Mid" name="pCandidateId" type="checkbox" value="@listofcandidate.user.CandidateId.Mid"/>
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Action("DisplayResume", "EmployerAccount", new {pCandidateId = listofcandidate.user.CandidateId.Mid,pJobId = Model.ObjJob.Id})" class="btn btn-mini btn-primary" style="font-weight: bold" data-target="#RetriveResume" data-toggle="modal">
+                                            <i class="icon-file icon-white"></i> Resume</a>
+                                        <a target="_tab" href="@Url.Action("DownloadResume", "EmployerAccount", new {pCandidateId = listofcandidate.user.CandidateId.Mid, pJobId = Model.ObjJob.Id})" class="btn btn-mini btn-success" style="font-weight: bold">
+                                            <i class="icon-download"></i> Download</a>
+                                        @if(listofcandidate.user.CandidateId.Mid >= 5)
+                                        {
+                                            <a target="_tab" href="@Url.Action("ViewProfile", "EmployerAccount", new {pCandidateId = listofcandidate.user.CandidateId.Mid, pJobId = Model.ObjJob.Id})" class="btn btn-mini btnprofileok" style="margin-left: 10px;font-weight: bold">
+                                            <i class="icon-folder-open"></i> Profile</a>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Action("PersonalMessage", "EmployerAccount", new {pEmployerId = Model.ObjEmployer.EmployerId, pCandidateId = listofcandidate.user.CandidateId.Mid, pJobId = Model.ObjJob.Id, pJobTitle = Model.ObjJob.JobTitle})" class="btn btn-mini btn-warning" style="font-weight: bold" data-target="#EditCandidate" data-toggle="modal">
+                                            <i class="icon-comment"></i> Message
+                                        </a>
+                                        
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Action("SendMailtoAll", "EmployerAccount", new {pCandidateId = listofcandidate.user.CandidateId.Mid@*, pJobId = Model.ObjJob.Id*@})" class="btn btn-mini btn-info" style="font-weight: bold" data-target="#MailtoCandidate" data-toggle="modal">
+                                            <i class="icon-envelope"></i> Mail</a>
+                                    </td>
+                                    <td>
+                                        <a href="@Url.Action("RemoveCandidate", "EmployerAccount", new {pAppliedJobId = listofcandidate.user.MasteId, pJobId = Model.ObjJob.Id, pCandidateId = listofcandidate.user.CandidateId.Mid})" class="btn btn-mini btn-danger" style="font-weight: bold"><i class="icon-remove"></i> Remove</a>
+                                    </td>
+                                </tr>
+                            }
+                        }    
+                        <tr><td colspan="5">
+                                <input type="submit" class="btn btn-small btn-success" value="Mail to Marked" name="MailtoMarked" style="font-weight: bold"/>
+                                <input type="submit" class="btn btn-small btn-warning " value="Message All" name="Message All" style="font-weight: bold"/>
+                                <input type="submit" class="btn btn-small btn-danger" value="Delete Marked" name="Delete Marked" style="font-weight: bold" />
+                                
+                           </td></tr>@* data-target="#MailtoAllCandidate" data-toggle="modal" *@
+                    </table>
+                </div>
+                
+            }
+            @*<div class="employerRightblock Post-Padding">
+                <table class="table">
+                    <tr>
+                        <td>Unread Message</td><td>5</td>
+                    </tr>
+                    <tr>
+                        <td>Sent Message</td><td>10</td>
+                    </tr>
+                    <tr>
+                        <td>Recived Message</td><td>10</td>
+                    </tr>
+                    <tr>
+                        <td>Totla Message</td><td>10</td>
+                    </tr>
+                </table>
+            </div>*@
+            <div id="info">
+            </div>
+        </div>
+    </body>
+</html>
+@using (Html.BeginForm("SendNewMessage", "EmployerAccount", FormMethod.Post, new { Area = "Job" }))
+{
+
+    <div id="EditCandidate" class="modal fade hide" tabindex="-1" role="dialog" aria-labelledby="EditCandidateLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+            <h3 id="EditCandidateLabel">Personal Message</h3>
+        </div>
+        <div class="modal-body">
+        </div>
+        <div class="modal-footer">
+            @this.SubmitButton("Send").Class("btn btn-primary")
+            @this.Button("Close").Class("btn").Attr("data-dismiss", "modal").Attr("aria-hidden", "true")
+        </div>
+
+    </div>
+}
+@using (Html.BeginForm("DisplayResume", "EmployerAccount", FormMethod.Post, new { Area = "Job" }))
+{
+
+    <div id="RetriveResume" class="modal fade hide" tabindex="-1" role="dialog" aria-labelledby="RetriveResumeLable1" aria-hidden="true" style="width: 680px;left: 680px">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+            <h3 id="RetriveResumeLable1">Candidate Resume</h3>
+        </div>
+        <div class="modal-body">
+        </div>
+        <div class="modal-footer">
+            @this.Button("Close").Class("btn").Attr("data-dismiss", "modal").Attr("aria-hidden", "true")
+        </div>
+    </div>
+}
+@using (Html.BeginForm("SendMail", "EmployerAccount", FormMethod.Post, new { Area = "Job" }))
+{
+
+    <div id="MailtoCandidate" class="modal fade hide" tabindex="-1" role="dialog" aria-labelledby="MailtoCandidateLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+            <h3 id="MailtoCandidateLabel">Send Mail</h3>
+        </div>
+        <div class="modal-body">
+        </div>
+        <div class="modal-footer">
+            @this.SubmitButton("Send").Class("btn btn-primary ui-icon-mail-closed")
+            @this.Button("Close").Class("btn").Attr("data-dismiss", "modal").Attr("aria-hidden", "true")
+        </div>
+
+    </div>
+}
+
+<div id="MailtoAllCandidate" class="modal fade hide" tabindex="-1" role="dialog" aria-labelledby="MailtoAllCandidateLabel" aria-hidden="true">
+    @using (Html.BeginForm("SendMail", "EmployerAccount", FormMethod.Post, new { Area = "Job" }))
+    {
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+            <h3 id="MailtoAllCandidateLabel">Send Mail</h3>
+        </div>
+        <div class="modal-body">
+        </div>
+        <div class="modal-footer">
+            @this.SubmitButton("Send").Class("btn btn-primary ui-icon-mail-closed")
+            @this.Button("Close").Class("btn").Attr("data-dismiss", "modal").Attr("aria-hidden", "true")
+        </div>
+    }
+</div>
+
+<script type="text/javascript">
+    $("a[data-target=#EditCandidate]").click(function (ev) {
+        ev.preventDefault();
+        var target = $(this).attr("href");
+
+        // load the url and show modal on success
+        $("#EditCandidate .modal-body").load(target, function () {
+            $("#EditCandidate").modal("show");
+        });
+    });
+</script>
+<script type="text/javascript">
+    $("a[data-target=#RetriveResume]").click(function (ev) {
+        ev.preventDefault();
+        var target = $(this).attr("href");
+
+        // load the url and show modal on success
+        $("#RetriveResume .modal-body").load(target, function () {
+            $("#RetriveResume").modal("show");
+        });
+    });
+    $("a[data-target=#MailtoCandidate]").click(function (ev) {
+        ev.preventDefault();
+        var target = $(this).attr("href");
+
+        // load the url and show modal on success
+        $("#MailtoCandidate .modal-body").load(target, function () {
+            $("#MailtoCandidate").modal("show");
+        });
+    });
+    $("a[data-target=#MailtoAllCandidate]").click(function (ev) {
+        ev.preventDefault();
+        var target = $(this).attr("href");
+
+        // load the url and show modal on success
+        $("#MailtoAllCandidate .modal-body").load(target, function () {
+            $("#MailtoAllCandidate").modal("show");
+        });
+    });
+</script>

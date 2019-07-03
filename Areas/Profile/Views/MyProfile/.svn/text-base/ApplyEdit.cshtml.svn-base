@@ -1,0 +1,77 @@
+﻿@using MvcContrib.FluentHtml
+@model JobPortal.Web.Areas.Profile.Models.ProfileResume
+@{
+    Html.EnableUnobtrusiveJavaScript(true);
+     HtmlHelper.ClientValidationEnabled = true;
+}   
+ 
+<style type="text/css"> 
+    #newed
+    {
+        display:none
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#default").click(function () {
+            $("#newed").hide();
+
+        });
+        $("#new").click(function () {
+            $("#newed").show();
+
+        });
+    });
+</script>
+<script>
+
+    $('#frmName').removeData("validator");
+    $('#frmName').removeData("unobtrusiveValidation");
+    $.validator.unobtrusive.parse('#frmName');
+</script>
+
+     @using (Html.BeginForm("ApplyEdit", "MyProfile", FormMethod.Post, new {enctype = "multipart/form-data" ,id="frmName"}))
+     {
+       <div class="span3">  
+                         @Html.HiddenFor(m => m.EditResume.Apply.JobId.Id)
+                         @Html.HiddenFor(m=>m.EditResume.Apply.CandidateId.Mid)
+                        
+                                <table border="0"  style="width:1500px; margin-left:30px " >
+                                <tr><td style="font-size:12px ;width:100px  ; font: bold">
+                                        Select Resume to Apply::       
+                                    </td>
+                                    <td style="width:1000px"></td>
+                                </tr> 
+                                <tr><td></td> 
+                                    <td style="width:1000px" >
+                                        @Html.RadioButton("ABC","YES",true,new{id="default"}) Default Resume 
+                                        
+                                    </td>
+                                </tr>
+                                <tr> <td></td>
+                                    <td style="width:1000px">
+                                        @Html.RadioButton("ABC","NO",new{id="new"}) Change Resume       
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    </td>
+                                    <td style="width:1000px " id="newed">
+                                        @Html.TextBoxFor(m => m.EditResume.Photo,new{ type = "file" }) 
+                                        @Html.ValidationMessageFor(m=>m.EditResume.Photo)
+                                    </td>
+                                </tr>
+                                    <tr>    @Html.TextAreaFor(m => m.EditResume.Apply.Coverletter)
+                                            @Html.ValidationMessageFor(m=>m.EditResume.Apply.Coverletter)
+
+                                    </tr>
+                            </table> 
+                          <div class="modal-footer">
+                            @this.SubmitButton("Save").Class("btn btn-primary")
+                            @this.Button("Close").Class("btn").Attr("data-dismiss", "modal").Attr("aria-hidden", "true")
+                        </div>
+
+                     
+        </div>
+     }

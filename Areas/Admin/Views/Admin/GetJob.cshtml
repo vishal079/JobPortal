@@ -1,0 +1,151 @@
+﻿@using JobPortal.Core;
+@using Microsoft.Web.Mvc
+
+@inherits MvcContrib.FluentHtml.ModelWebViewPage<JobPortal.Areas.Admin.Models.AdminVM>
+
+@{
+    ViewBag.Title = "GetJob";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<html>
+    <head>
+     </head>
+    <body>
+      
+        <div id="content">
+            <div id="LefttoRight">
+            <div class="navbar " style="font-size:15px;">
+             <div class="navbar-inner">
+                <ul class="nav">
+                    <li>
+                        @Html.ActionLink("JobDetail","GetJob",new{area="Admin",Controller="Admin"},new {id="abc"})   
+                        @*<a href="#">Job</a>*@
+                    </li>
+                    <li>
+                         @Html.ActionLink("CandidateDetail","CandidateProfileList",new {area="Admin",Controller="Admin"},new {id="def"})
+                         @*<a href="#"></a>*@
+                    </li>
+                    <li style="margin-left: 380px;">
+                        @Html.ActionLink("sign-out","AdminLogout","Admin")
+                    </li>
+               </ul>
+            </div>
+            </div>
+ 
+        </div>
+            <div id="LefttoRight">           
+                <table class="tbtitle" border="0">
+                    
+                    <tr><td align="left" ><h4>@Model.Job.TotalRecord Total Job &nbsp;&nbsp </h4></td> </tr>
+                </table>
+                <hr /> 
+                <table class="table table-striped table-hover" style="font-size: 14px">
+                    <tbody>
+                         
+                        @foreach (Job _job in Model.Jobs)
+                        {
+                            <tr>
+                                <td class="span10">
+                                    <div >
+                                        <span style="font-size: 15px; line-height: 20px; font-weight: bold">@_job.JobTitle</span>
+                                        <small>
+                                            <strong>(@_job.Emplyer.CompanyName)&nbsp;</strong>&nbsp;
+                                            @* <strong>@_job.Age.Days</strong>
+                                                @if(@_job.Age.Days>=3)
+                                                {
+                                                    <p class="badge badge-info" >Time Over</p>
+                                                }*@
+                                        </small>    
+                                    </div>
+                                    <div>
+                                            
+                                        <p class="span3"><i class="icon-user"></i>&nbsp;@_job.Emplyer.OwnerName</p>
+                                        <p class="span2">@*<i class="icon-envelope"></i>*@&nbsp;@_job.Country</p>
+                                        <div  >
+                                          
+                                            @if(_job.Status==true)
+                                            {
+                                               
+                                                <p class="badge badge-success" onclick="return  confirm('Are you sure you want to waiting this job?')">
+                                                    @Html.ActionLink("posted Job","UpdateRecord","Admin",new{Id=_job.Id,status=_job.Status},new{@style="color:white"})
+                                                </p>@*
+                                                      @Ajax.ActionLink("Prev", "updateRecord", "Admin",new{id = _job.Id,status=_job.Status },
+                                                       new AjaxOptions() { UpdateTargetId="sanjay",  HttpMethod="GET"},new{@class = "btn"})<html>&nbsp;</html>*@
+                                                      
+                                            }
+                                            else
+                                            {
+                                                
+                                                <p  class="badge badge-warning" style="text-decoration: blink;" onclick="return  confirm('Are you sure you want to placed?')">
+                                                    @Html.ActionLink("waiting Job","UpdateRecord",new{Id=_job.Id ,status=_job.Status},new{@style="color:white"})
+                                                </p>
+                                            }
+                                        </div>
+                                    </div>
+                                     
+                                    <div class="span8">
+                                        @_job.Emplyer.AboutCompany
+                                    </div>
+                                </td>
+                                <td class="span2">
+                                    <div>
+                                        <strong>
+                                            @_job.PostedTime.GetValueOrDefault().ToShortDateString()
+                                            
+                                        </strong> 
+                                    </div>
+                                    <div style="padding-top: 15px;">
+                                        <a class="btn btn-small btn-danger" onclick = "return confirm('Are you sure you want to delete?')" href="@Url.Action("DeleteJob", "Admin", new {area = "Admin", Id = _job.Id,})">
+                                            <i class="icon-remove-sign icon-white"></i>
+                                        </a>
+                                            
+                                        <a class="btn btn-small btn-primary"    href="@Url.Action("ShowDetailJob", "Admin", new {area = "Admin", Id = _job.Id})">
+                                            <i class="icon-hand-right icon-white"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+               
+               
+                    </tbody>
+                </table>
+                @*  @Html.Partial("AdminPageIndex",Model)*@
+                @using (Html.BeginForm("GetJob","Admin",FormMethod.Post))
+                {
+                    int currentPage = Model.Job.PageIndex;
+                    int totalRecords = Model.Job.TotalRecord;
+                    <list>
+                        @if (currentPage > 0)
+                        {
+                            @Html.ActionLink("Prev","AdminPageIndex","Admin",new {id=currentPage-1},new {@class="btn"})<html>&nbsp;</html>
+                        }
+                        @for (int i = 1; i < totalRecords/5 + 1; i++)
+                        {
+                            if (currentPage == i - 1)
+                            {
+                                @Html.ActionLink(""+i,"AdminPageIndex",new {disable = "disable"},new{@class = "btn",@title = "You are on same page" ,onclick = "javascript:return false;" ,style="background: darkorange"})<html>&nbsp;</html>
+                            }
+                            else
+                            {
+                                @Html.ActionLink("" + i, "AdminPageIndex", "Admin",new{id = i - 1},
+                    
+                                                 new{@class = "btn",id="button"}) <html>&nbsp;</html>
+                            }
+                        }
+                        @if (totalRecords > (currentPage + 1) * 5)
+                        {
+                            @Html.ActionLink("Next", "AdminPageIndex", "Admin",new{id = currentPage + 1},
+                                             new{@class = "btn"})<html>&nbsp;</html>
+                   
+                        }
+
+                    </list>
+                }
+            </div> 
+            <div id="info"></div>          
+        </div>
+    </body>
+</html>

@@ -1,0 +1,43 @@
+﻿@inherits MvcContrib.FluentHtml.ModelWebViewPage<JobPortal.Areas.Employer.Models.EmployerVM>
+
+<div id="DetailDisscuss" style="margin-top: 20px;padding-top: 20px">
+    @if(Model.PMs != null)
+    {
+        var count = 0;
+        using (Html.BeginForm())
+        {
+            <table class="table table-hover table-condensed" style="width: 430px;font-size: small">
+                <tr style="font-weight: bold">
+                    <td>#</td>
+                    <td>UserEmail</td>
+                    <td>Messages</td>
+                    <td>Time</td>
+                </tr>
+                @foreach (var msg in Model.PMs)
+                {
+                    count++;
+                    <tr>
+                        <td>@msg.Id2</td>
+                        <td style="width: 20px">@msg.User2Name</td>
+                        <td>@msg.Message</td>
+                        <td>@msg.CreatedTime</td>
+                    </tr>
+                    //Model.PM.Id = msg.Id;
+                }
+                @{
+                    //Model.PM.Id2 = count;
+                    //Model.PM.IsDiscussionAvailable = true;
+                }
+            </table>
+            @*@Html.HiddenFor(m=>m.PM.Id)
+            @Html.HiddenFor(m=>m.PM.Id2)            
+            @Html.HiddenFor(m=>m.PM.User1)
+            @Html.HiddenFor(m=>m.PM.User2)*@
+            @Html.TextAreaFor(m=>m.PM.Message,new {width="250px"})
+            @*@Html.HiddenFor(m=>m.PM.IsDiscussionAvailable)*@
+            <br/>
+            <input type="submit" class="btn btn-small btn-primary" name="Send" value="send"/>
+        }
+     }
+</div>
+

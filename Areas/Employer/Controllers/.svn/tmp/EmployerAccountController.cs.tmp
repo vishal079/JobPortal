@@ -1,0 +1,535 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Security;
+using System.Windows.Forms;
+using System.Xml;
+using JobPortal.Core;
+using JobPortal.Areas.Employer.Models;
+using JobPortal.Core.Domain;
+using JobPortal.Web;
+using Microsoft.Office.Interop.Word;
+using SautinSoft;
+using System.Net.Mail;
+using iTextSharp.text;
+
+using WebSupergoo.ABCpdf9;
+using WebSupergoo.ABCpdf9.Objects;
+using WebSupergoo.ABCpdf9.Atoms;
+using WebSupergoo.ABCpdf9.Operations;
+using IDataObject = System.Runtime.InteropServices.ComTypes.IDataObject;
+using MailMessage = System.Net.Mail.MailMessage;
+
+namespace JobPortal.Areas.Employer.Controllers
+{
+    using Core.Domain.User;
+
+    public class EmployerAccountController : Controller
+    {
+        //
+        // GET: /Employer/EmployerAccount/
+        private SearchRepository _searchRepository;
+        private EmployerRepository _employerRepository;
+        private CandidateRepository _candidateRepository;
+        private EmployerVM _employerVm;
+
+        [Authorize]
+        [HttpGet]
+        public ActionResult Index()
+        {  
+            HttpCookie cookie = HttpContext.Request.Cookies.Get(FormsAuthentication.FormsCookieName);
+            if (cookie != null)
+            {
+                FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(cookie.Value);
+                int candidateId = int.Parse(ticket.Name);
+                _searchRepository = new SearchRepository();
+                _employerRepository = new EmployerRepository();
+                _employerVm = new EmployerVM
+                                  {
+                                      Jobs = _searchRepository.GetJobbyId(candidateId),
+                                      OApplayJobs = _employerRepository.GetAppliedCandidate(candidateId)
+                                  };
+                return View(_employerVm);
+            }
+            return View("Index","_Layout");
+        }
+
+        [Authorize]
+        public ActionResult ViewAll(int pJobId)
+        {
+            HttpCookie cookie = HttpContext.Request.Cookies.Get(FormsAuthentication.FormsCookieName);
+            if (cookie != null)
+            {
+                FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(cookie.Value);
+                int candidateId = int.Parse(ticket.Name);
+                _employerVm = new EmployerVM();
+                _employerRepository = new EmployerRepository();
+                _searchRepository = new SearchRepository();
+                _employerVm.ObjEmployer = new Employer {EmployerId = candidateId};
+                _employerVm.ObjJob = _searchRepository.SearchJobbyId(pJobId);
+                _employerVm.ResumeList = _employerRepository.ViewAll(pJobId);
+               
+                return View(_employerVm);
+            }
+            return View("Index");
+        }
+       
+        public  ActionResult ViewProfile(long id )
+        {
+            _employerVm =new EmployerVM();
+         
+            _candidateRepository =new CandidateRepository();
+
+               //_employerVm.Candidate   = _candidateRepository.GetCandidateRecord(id);
+            _employerVm.Experiences = _candidateRepository.GetExperienceRecord(id);
+            _employerVm.Educations  = _candidateRepository.GetEducationRecord(id);
+            _employerVm.Skills      =  _candidateRepository.GetSkillRecord(id);
+            return PartialView(_employerVm);
+        }
+
+        [Authorize]
+        public ActionResult PersonalMessage(long pEmployerId, long pCandidateId,int pJobId, string pJobTitle)
+        {
+            _employerRepository = new EmployerRepository();
+            _searchRepository = new SearchRepository();
+            _employerVm = new EmployerVM
+                              {
+                                  PM =
+                                      new PersonalMessage { User1 = pEmployerId, User2 = pCandidateId, JobId=pJobId, Title = pJobTitle },
+                                  PMs = _employerRepository.IsDiscussionAvailable(pEmployerId, pCandidateId, pJobTitle),
+                                  ObjJob = _searchRepository.SearchJobbyId(pJobId)
+                              };
+            //_employerVm.ReadMessages = _employerRepository.GetReadMessage(pEmployerId);       /* Need to display read message in messagebox*/
+            //_employerVm.UnReadMessges = _employerRepository.GetUnReadMessage(pEmployerId);    /* Need to display unread message in messagebox*/
+            return PartialView("PersonalMessage",_employerVm);
+        }
+        
+        [Authorize]
+        public ActionResult SendNewMessage(PersonalMessage pm)
+        {
+            HttpCookie cookie = HttpContext.Request.Cookies.Get(FormsAuthentication.FormsCookieName);
+            if (cookie != null)
+            {
+                FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(cookie.Value);
+                int candidateId = int.Parse(ticket.Name);
+                _employerRepository = new EmployerRepository();
+                pm.User1 = candidateId;
+                if (pm.IsDiscussionAvailable)
+                {
+                    _employerRepository.AddMessagetoDiscussion(pm);
+                }
+                else
+                {
+                    _employerRepository.AddnewMessage(pm);
+                }
+            }
+            ViewAll(pm.JobId);
+            return View("ViewAll");
+        }
+        
+        [Authorize]
+        public ActionResult RemoveCandidate(int pAppliedJobId,int pJobId,int pCandidateId)
+        {
+            _employerRepository = new EmployerRepository();
+            _employerRepository.RemoveCandidate(pAppliedJobId,pJobId,pCandidateId);
+            ViewAll(pJobId);
+            return PartialView("ViewAll");
+        }
+        
+        [Authorize]
+        public ActionResult DisplayResume(int pCandidateId,int pJobId)
+        {
+            var f = new PdfFocus();
+            _searchRepository = new SearchRepository();
+            _employerVm = new EmployerVM();
+            _employerVm.Resume = new ResumeUpload();
+            _employerVm.Image = _searchRepository.ResumeRetrive(pCandidateId);
+            foreach (DataRow data in _employerVm.Image.Rows)
+            {
+                _employerVm.Resume.image = (byte[])data["FileData"];
+                _employerVm.Resume.FileName = data["FILENAME"].ToString();
+                _employerVm.Resume.FileExt = data["FileExtention"].ToString();
+            }
+            if (_employerVm.Resume.FileExt == "pdf")
+            {
+                f.OpenPdf(_employerVm.Resume.image);
+
+                if (f.PageCount > 0)
+                {
+                    _employerVm.Resume.FileName = f.ToText();
+                    _employerVm.Resume.FileName = _employerVm.Resume.FileName.Remove(0, 49);
+                    _employerVm.Resume.FileName = _employerVm.Resume.FileName.Replace('', '>');
+                    _employerVm.Resume.FileName = _employerVm.Resume.FileName.Replace('', '>');
+                    return PartialView("DisplayResume", _employerVm);
+                }
+            }
+            if (_employerVm.Resume.FileExt == "doc" || _employerVm.Resume.FileExt == "docx")
+            {
+                Stream fStream = new MemoryStream(_employerVm.Resume.image);
+                Response.AddHeader("Content-Disposition", "inline; filename=Filename.doc");
+                var fStreamReader = new StreamReader(fStream);
+                _employerVm.Resume.FileName = fStreamReader.ReadToEnd();
+                //_employerVm.Resume.FileName = file.FileStream.ReadByte().ToString();
+                //_employerVm.Resume.FileName = System.Text.UTF8Encoding.UTF8.GetString(_employerVm.Resume.image);
+
+                ////_employerVm.Resume.FileName = _employerVm.Resume.FileName.Remove('��ࡱ�');
+                //_employerVm.Resume.FileName = _employerVm.Resume.FileName.Replace('�', ' ');
+                //_employerVm.Resume.FileName = _employerVm.Resume.FileName.Replace('ࡱ', ' ');
+                //_employerVm.Resume.FileName = _employerVm.Resume.FileName.Replace('', ' ');
+                //_employerVm.Resume.FileName = _employerVm.Resume.FileName.PadRight(500);
+                //byte[] test;
+                //int i = 0;
+                //foreach (char c in _employerVm.Resume.FileName)
+                //{
+                //    i++;
+                //    if(c == 'ࡱ' || c == '�' || c == '')
+                //    {
+                //        //test[i] = ' ';
+                //    }
+                //}
+
+                ////XmlDocument xml = new XmlDocument().LoadXml(_employerVm.Resume.FileName);
+                //Doc doc = new Doc();
+                //var xReadOptions = new XReadOptions();
+                //xReadOptions.FileExtension = "doc";
+                
+                ////xReadOptions.ReadModule = ReadModuleType.Pdf;
+                //doc.Read(_employerVm.Resume.image,xReadOptions);
+                ////doc.Save("Output.pdf");
+                ////_employerVm.Resume.FileName = doc.Read(_employerVm.Resume.image, xReadOptions).ToString();
+                return PartialView("DisplayResume", _employerVm);
+            }
+            else
+            {
+                ViewAll(pJobId);
+                return View("ViewAll");
+            }
+        }
+
+        [Authorize]
+        public ActionResult DownloadResume(int pCandidateId,int pJobId)
+        {
+            _searchRepository = new SearchRepository();
+            _employerVm = new EmployerVM {Resume = new ResumeUpload()};
+            _employerVm.Image = _searchRepository.ResumeRetrive(pCandidateId);
+            foreach (DataRow data in _employerVm.Image.Rows)
+            {
+                _employerVm.Resume.image = (byte[])data["FileData"];
+                _employerVm.Resume.FileName = data["FILENAME"].ToString();
+                _employerVm.Resume.FileExt = data["FileExtention"].ToString();
+            }
+            if (_employerVm.Resume.FileExt == "pdf")
+            {
+                string filename = null;
+                foreach (char c in _employerVm.Resume.FileName)
+                {
+                    if (c != ' ')
+                    { filename = filename + c; }
+                    else
+                    { filename = filename + '_'; }
+                }
+                    Stream fStream = new MemoryStream(_employerVm.Resume.image);
+                    Response.AddHeader("Content-Disposition", "inline; filename=" + filename + "");
+                    return File(fStream, "application/pdf");
+            }
+            else if(_employerVm.Resume.FileExt == "doc" || _employerVm.Resume.FileExt == "docx")
+            {
+                string filename = null;
+                foreach (char c in _employerVm.Resume.FileName)
+                {
+                    if (c != ' ')
+                    {   filename = filename + c;    }
+                    else
+                    {   filename = filename + '_';  }
+                }
+                    Stream fStream = new MemoryStream(_employerVm.Resume.image);
+                    Response.AddHeader("Content-Disposition", "inline; filename=" + filename + "");
+                    return File(fStream, "application/doc");     
+            }
+            else
+            {
+                ViewAll(pJobId);
+                return View("ViewAll");
+            }
+        }
+
+        [Authorize]
+        public ActionResult GetEmailAddress(int pCandidateId,int pJobId)
+        {
+            HttpCookie cookie = HttpContext.Request.Cookies.Get(FormsAuthentication.FormsCookieName);
+            if (cookie != null)
+            {
+                var mail = new SendMail();
+                _employerRepository = new EmployerRepository();
+                FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(cookie.Value);
+                int employerId = int.Parse(ticket.Name);
+                
+                //MailMessage sMailMessagemail = new MailMessage();
+                //mail.From = _employerRepository.GetEmailAddress(employerId);
+                //mail.To = _employerRepository.GetEmailAddress(pCandidateId);
+                return View("SendMail", mail);
+            }
+            return View("SendMail");
+        }
+
+        [Authorize]
+<<<<<<< .mine
+        public ActionResult SendMailtoAll(string[] pCandidateId, string MailtoMarked)
+=======
+        public ActionResult SendMailtoAll(string[] pCandidateId, string mailtoMarked, string deleteMarked, string messageAll,EmployerVM evm)
+>>>>>>> .r61
+        {
+            HttpCookie cookie = HttpContext.Request.Cookies.Get(FormsAuthentication.FormsCookieName);
+            if (cookie != null)
+            {
+                FormsAuthenticationTicket ticket = FormsAuthentication.Decrypt(cookie.Value);
+                int employerId = int.Parse(ticket.Name);
+
+                if (deleteMarked == "Delete Marked")
+                {
+<<<<<<< .mine
+                    EMainDetail = new MainUser { Email = _employerRepository.GetEmailAddress(employerId) }
+                };
+                string ids = pCandidateId.Aggregate<string, string>(null, (current, id) => current + id + ',');
+                sendmail.To = _employerRepository.GetAllEmailAddress(ids);
+                if (MailtoMarked != null)
+=======
+                    _employerRepository=new EmployerRepository();
+
+                    //foreach (var s in pCandidateId)
+                    //{
+                      //  int i = int.Parse(s);
+                       // _employerRepository.RemoveMarkCandidate(i, evm.ObjJob);
+                    //}
+                   string ids = pCandidateId.Aggregate<string, string>(null, (current, id) => current + id + ',');
+                   _employerRepository.RemoveMarkCandidate(ids,evm.ObjJob);
+                    ViewAll(evm.ObjJob.Id);
+                    return View("ViewAll");
+
+                }
+                if(mailtoMarked =="Mail to Marked")
+>>>>>>> .r61
+                {
+
+                    _employerRepository = new EmployerRepository();
+                    var sendmail = new SendMail
+                    {
+                        EMainDetail = new MainUser { Email = _employerRepository.GetEmailAddress(employerId) }
+                    };
+                    string ids = pCandidateId.Aggregate<string, string>(null, (current, id) => current + id + ',');
+                    sendmail.To = _employerRepository.GetAllEmailAddress(ids);
+                    if (pCandidateId.Count() > 1)
+                    {
+                        return View("SendMultipleMail", sendmail);
+                    }
+                    return View("SendMail", sendmail);
+                }
+                if (messageAll == "Message All")
+                {
+                    
+                }
+                
+            }
+            return View("SendMail");
+        }
+
+        [ValidateInput(false)]
+        [Authorize]
+        public ActionResult SendMail(SendMail mailDetail, string optionsRadios)
+        {
+            try
+            {
+                //if (TempData["emailAddress"] != null)
+                //{
+                    var mail = new MailMessage {From = new MailAddress(mailDetail.EMainDetail.Email)};
+                    mailDetail.To = (List<string>) TempData["emailAddress"];
+                    mailDetail.Cc = (List<string>) TempData["CC"];
+                    foreach (string emailTo in mailDetail.To)
+                    {
+                        if (mailDetail.Mailto == null)
+                        {
+                            mailDetail.Mailto = emailTo;
+                        }
+                        else
+                        {
+                            mailDetail.Mailto = mailDetail.Mailto + "," + emailTo;
+                        }
+                        //SendMailByThread(mailDetail,optionsRadios,email);
+                        //mail.To.Add(email);
+                        //Task.Factory.StartNew(SendMailTest(email)).Start();
+                    }
+                    if (mailDetail.Cc != null)
+                    {
+                        foreach (string emailCc in mailDetail.Cc)
+                        {
+                            if (mailDetail.Mailcc == null)
+                            {
+                                mailDetail.Mailcc = emailCc;
+                            }
+                            else
+                            {
+                                mailDetail.Mailcc = mailDetail.Mailcc + "," + emailCc;
+                            }
+                        }
+                    }
+                    SendMailByThread(mailDetail, optionsRadios);
+                //}
+                //else
+                //{
+                //    //ViewAll();
+                //    return View("ViewAll");
+                //}
+                //mail.Subject = mailDetail.Subject;
+                //mail.Body = mailDetail.Body;
+
+                //var client = new SmtpClient("smtp.gmail.com", 587);
+                //if (optionsRadios == null)
+                //{
+                //    //client.UseDefaultCredentials = false;
+                //    client.Host = "smtp.gmail.com";
+                //    client.Credentials = new NetworkCredential
+                //        (mailDetail.EMainDetail.Email, mailDetail.EMainDetail.Password);
+                //    client.EnableSsl = true;
+                //    client.Port = 587;
+                //}
+                //else
+                //{
+                //    client.Host = "smtp.gmail.com";
+                //    client.Credentials = new NetworkCredential
+                //        ("sweetvisulove@gmail.com", "45844175");
+                //    client.EnableSsl = true;
+                //}
+                //client.Send(mail);
+            }
+            catch(Exception)
+            {
+                this.ShowMessage(MessageType.Error, "Sorry, Please try again",true);
+                //SendMail(mailDetail, optionsRadios);
+            }
+            return RedirectToAction("Index", "EmployerAccount");
+        }
+
+        //public void SendMailByThread(SendMail mailDetail, string optionsRadios,string pEmail)
+        public void SendMailByThread(SendMail mailDetail, string optionsRadios)
+        {
+            if(optionsRadios != null)
+            {
+                mailDetail.DefaultEmail = true;
+            }
+            //mailDetail.Mailto = pEmail;
+            var thread = new Thread(LongTask);
+            thread.Start(mailDetail);
+        }
+
+        public void LongTask(object maildetail)
+        {
+            try
+            {
+                var sendMail = (SendMail)maildetail;
+                var mail = new MailMessage { From = new MailAddress(sendMail.EMainDetail.Email) };
+                mail.To.Add(sendMail.Mailto);
+                if(sendMail.Mailcc != null)
+                    mail.CC.Add(sendMail.Mailcc);
+                //mail.Bcc.Add(sendMail.Mailcc);
+                mail.Subject = sendMail.Subject;
+                mail.Body = sendMail.Body;
+                var client = new SmtpClient("smtp.gmail.com", 587);
+                if (sendMail.DefaultEmail == false)
+                {
+                    client.Host = "smtp.gmail.com";
+                    client.Credentials = new NetworkCredential(sendMail.EMainDetail.Email, sendMail.EMainDetail.Password);
+                    client.EnableSsl = true;
+                    client.Port = 587;
+                }
+                else
+                {
+                    client.Host = "smtp.gmail.com";
+                    client.Credentials = new NetworkCredential("sweetvisulove@gmail.com", "45844175");
+                    client.EnableSsl = true;
+                }
+                client.Send(mail);
+                this.ShowMessage(MessageType.Success, "Your message has been sent.");
+            }
+            catch (Exception exception)
+            {
+                this.ShowMessage(MessageType.Error, "Sorry, Your message has not been sent. Please try again" + exception);
+                //LongTask(maildetail);
+            }
+        }
+
+        public ActionResult RemoveCandidatefromList(string email)
+        {
+            var sendMail = new SendMail { To = (List<string>)TempData["emailAddress"] };
+            sendMail.To.Remove(email);
+            TempData["emailAddress"] = sendMail.To;
+            return PartialView("RemoveCandidatefromList",sendMail);
+        }
+
+        public ActionResult AddtoCc(string email)
+        {
+            var sendMail = new SendMail {Cc = new List<string>()};
+            if (TempData["CC"] != null)
+            {
+                sendMail.Cc = (List<string>)TempData["CC"];
+                sendMail.Cc.Add(email);
+                return PartialView("AddtoCc", sendMail);
+            }
+            else
+            {
+                sendMail.Cc.Add(email);
+                return PartialView("AddtoCc", sendMail);
+            }
+        }
+
+        public ActionResult RemoveCc(string email)
+        {
+            if(email == null){  email = "";  }
+            var sendMail = new SendMail{ Cc = (List<string>)TempData["CC"] };
+            sendMail.Cc.Remove(email);
+            TempData["CC"] = sendMail;
+            return PartialView("AddtoCc",sendMail);
+        }
+
+        public ActionResult ExtrectTextfromWord()
+        {
+            //var textString = new StringBuilder();
+            //var nt = new NameTable();
+            //var namespaceManager = new XmlNamespaceManager(nt);
+            //namespaceManager.AddNamespace("w", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
+            //var xDoc = new XmlDocument(nt);
+            //xDoc.Load(stream);
+            //XmlNodeList paragraphNodes = xDoc.SelectNodes("//w:p", namespaceManager);
+            //if (paragraphNodes != null)
+            //{
+            //    foreach (XmlNode paragraphNode in paragraphNodes)
+            //    {
+            //        XmlNodeList textNodes = paragraphNode.SelectNodes(".//w:t", namespaceManager);
+            //        foreach (XmlNode textNode in textNodes)
+            //        {
+            //            textString.Append(textNode.InnerText);
+            //        }
+            //        textString.Append(Environment.NewLine);
+            //    }
+            //}
+            return View("ViewAll");
+        }
+        public ActionResult DeleteMarkAll(string[] check)
+        {
+            _employerRepository =new EmployerRepository();
+            string ids =check.Aggregate<string, string>(null, (current, id) => current + id + ',');
+            _employerRepository.RemoveMarkJob(ids);
+
+            Index();
+            return View("Index");
+        }
+    }
+}

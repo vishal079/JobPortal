@@ -1,0 +1,60 @@
+﻿@using JobPortal.Core
+
+@using JobPortal.Areas.Job.Models
+
+    @{
+        var recentSearch = new RecentSearch();
+        var test = Session["RecentSearch"] as List<RecentSearch>;
+    }
+<div class="RecentjobBorder">
+<table>
+    <tr class="RecentJob">
+        <td style="width: 283px">
+            @if(test != null)
+            {
+                @test.Count
+            }
+            Recent search job  </td>
+    </tr>
+</table>
+<table>
+    @if(test != null)
+    {
+        foreach(var job in test)
+        {
+            if(job.KeyTerms != null && job.Location != null)
+            {
+                <tr style="padding-top: 15px">
+                    <td class="Post-Padding"><i class="icon-hand-right"></i></td>
+                    <td class="" >    
+                        <p class="tbcity">
+                            @Html.ActionLink("'"+@job.KeyTerms+"' Keyterms and '"+@job.Location+"' Location", "RecentSearch", new {pKeyTerm = job.KeyTerms, pLocation = job.Location}, new {@class = "btn-link"})</p>
+                        @*@Ajax.ActionLink(@job.KeyTerms && @job.KeyTerms+"","RecentSearch",new {pKeyTerm = job.KeyTerms,pLocation = job.Location})
+                        <p>@Ajax.ActionLink("Changeajax", "RecentSearch",new {pKeyTerm = job.KeyTerms,pLocation = job.Location},
+                                        new AjaxOptions() {UpdateTargetId = "changeResume", HttpMethod = "GET",InsertionMode = InsertionMode.Replace}) This! And Send New Resum</p>*@    
+                    </td>
+                </tr>
+            }
+            else if(job.KeyTerms != null)
+            {
+                <tr>
+                    <td class="Post-Padding"><i class="icon-hand-right"></i></td>
+                    <td class="Post-Padding">    
+                        <p class="tbcity">@Html.ActionLink("'"+@job.KeyTerms+"' KeyTerms", "RecentSearch", new {pKeyTerm = job.KeyTerms, pLocation = job.Location}, new {@class = "btn-link"})</p>
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <td class="Post-Padding"><i class="icon-hand-right"></i></td>
+                    <td class="Post-Padding">    
+                        <p class="tbcity">
+                            @Html.ActionLink("'"+@job.Location+"' Location", "RecentSearch", new {pKeyTerm = job.KeyTerms, pLocation = job.Location}, new {@class = "btn-link"})    </p>    
+                    </td>
+                </tr>
+            }
+        }
+    }
+</table>
+    </div>

@@ -1,0 +1,100 @@
+﻿@using JobPortal.Core
+
+@using MvcContrib.FluentHtml
+
+@inherits MvcContrib.FluentHtml.ModelWebViewPage<JobPortal.Web.ResumeUploadVM>
+              
+@{
+    Html.EnableUnobtrusiveJavaScript(true);
+}
+@*@{
+    ViewBag.Title = "Upload Resume";
+    Layout = "../../../../Views/Shared/_Layout.cshtml";
+    if (TempData["User_Id"] != null)
+    {
+        TempData.Keep();
+    }
+}*@
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(function () {
+            $('.ckeditor').CKEDITOR();
+        });
+            
+        $("#Click").click(function () {
+            $('#Name').attr("disabled", false);
+            $('#Email').attr("disabled", false);
+            $('#Contect').attr("disabled", false);
+            $('#Location').attr("disabled", false);
+        });
+    });
+</script>
+
+@Html.ValidationSummary(true, "Please correct the errors and try again.")
+    @Html.HiddenFor(m => m.ResumeUpload.JobId)
+    @Html.HiddenFor(m => m.Job.Emplyer.CompanyName)
+    <div id="changeResume">
+            @if(Model.ResumeUpload.user != null)            
+            {            
+                @Html.HiddenFor(m=>m.ResumeUpload.IsUserAvailable)        
+                <label id="Warning" class="text-error" style="font-weight: bold">Be Careful If you edit this information this will changed all your earliar applied job</label>        
+                        
+                <div class="editor-label"><label>Name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  : &nbsp;&nbsp;@Html.TextBoxFor(m => m.ResumeUpload.user.UserName, new {@class = "input-large ", disabled = "disabled" ,id="Name"})                          
+                                              @Html.ValidationMessageFor(m => m.ResumeUpload.user.UserName)<br/></label></div>
+                <div class="editor-label"><label>Email &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : &nbsp;&nbsp; @Html.TextBoxFor(m => m.ResumeUpload.user.Email, new { @class = "input-large", @title = "Enter your Email Login Email to Communicate", disabled = "disabled", id="Email"})
+                                              @Html.ValidationMessageFor(m => m.ResumeUpload.user.Email)<br/></label></div>
+                <div class="editor-label"><label>Contect &nbsp;&nbsp;&nbsp;                       : &nbsp;&nbsp; @Html.TextBoxFor(m => m.ResumeUpload.user.Contect, new { @class = "input-large", @title = "Enter your Contect number to communicate",disabled = "disabled", id = "Contect"})
+                                              @Html.ValidationMessageFor(m => m.ResumeUpload.user.Contect)<br/></label></div>
+                <div class="editor-label"><label>Location &nbsp;&nbsp;                            : &nbsp;&nbsp; @Html.TextBoxFor(m => m.ResumeUpload.user.Location, new { @class = "input-large", @title = "Enter your Location", disabled = "disabled", id = "Location"})
+                                              @Html.ValidationMessageFor(m => m.ResumeUpload.user.Location)<br/></label></div>
+                @Html.HiddenFor(m=>m.ResumeUpload.user.MasteId)
+                <input type="button" id="Click" name="Click" value="Click here!" class="btn btn-small btn-warning"/>           
+            }            
+            else            
+            {
+                <div class="editor-label"><label>Name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  : &nbsp;&nbsp; @Html.TextBoxFor(m => m.ResumeUpload.user.UserName, new { placeholder = "Full Name", @class = "input-large", @title = "Enter your Full Name To Display Employer" })
+                                              @Html.ValidationMessageFor(m => m.ResumeUpload.user.UserName)<br/></label></div>
+                <div class="editor-label"><label>Email &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : &nbsp;&nbsp; @Html.TextBoxFor(m => m.ResumeUpload.user.Email, new { placeholder = "Add Your@email.com", @class = "input-large", @title = "Enter your Email Login Email to Communicate" })
+                                              @Html.ValidationMessageFor(m => m.ResumeUpload.user.Email)<br/></label></div>
+                <div class="editor-label"><label>Contect &nbsp;&nbsp;&nbsp;                       : &nbsp;&nbsp; @Html.TextBoxFor(m => m.ResumeUpload.user.Contect, new { placeholder = "Add Contect", @class = "input-large", @title = "Enter your Contect number to communicate" })
+                                              @Html.ValidationMessageFor(m => m.ResumeUpload.user.Contect)<br/></label></div>
+                <div class="editor-label"><label>Location &nbsp;&nbsp;                            : &nbsp;&nbsp; @Html.TextBoxFor(m => m.ResumeUpload.user.Location, new { placeholder = "Add Location", @class = "input-large", @title = "Enter your Location" })
+                                              @Html.ValidationMessageFor(m => m.ResumeUpload.user.Location)<br/></label></div>           
+            }
+        <div>
+            <h5>Company Name &nbsp; : &nbsp; <a style="font: pop-up-menu">                                    
+                @{
+                    var httpCookieCompanyName = Request.Cookies.Get("companyname");
+                    var httpCookieJobId = Request.Cookies.Get("jobid");                                        
+                    }
+                @if (httpCookieCompanyName != null)  
+                {                                                
+                    @httpCookieCompanyName.Value                                    
+                }                        
+            </a></h5>
+        </div><hr/>
+        <div id="ok">
+            <h5>Upload Resume</h5>
+            <p>This will attach a resume (max 10MB) if you do not have a profile or if you'd like to use an alternate resume to apply.</p>
+            @if (Model.IsResumeAvailable == false)           
+            {            
+                <div>
+                    @Html.TextBoxFor(m => m.ResumeUpload.Photo, new { type = "file" })<br/>
+                </div>            
+            }
+            else            
+            {     
+                Html.EnableUnobtrusiveJavaScript(false);
+                <div>
+                    <h5>Your resume is available</h5>
+                    <p>@Ajax.ActionLink("ChangeResume", "DeleteResume",new {jobId=1,companyName="Version"},
+                                        new AjaxOptions() {UpdateTargetId = "changeResume", HttpMethod = "GET",InsertionMode = InsertionMode.Replace}) This! And Send New Resum</p><br/>
+                    <p>Or Apply Send Same Resume</p>
+                </div>            
+            }
+        </div>   
+    </div><hr/>            
+    <div style="width: 600px">
+        <h5>Write Your cover Letter</h5><br/>
+        @Html.TextAreaFor(m => m.ResumeUpload.ApplayJob.Coverletter, new { @Class = "ckeditor" })
+    </div>

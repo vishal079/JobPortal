@@ -1,0 +1,30 @@
+﻿@using JobPortal.Core
+@using JobPortal.Web.Helpers
+
+@inherits MvcContrib.FluentHtml.ModelWebViewPage<JobPortal.Areas.Job.Models.JobSearchVM>
+
+@{
+    ViewBag.Title = "SearchJob";
+    Layout = "../../../../Views/Shared/_Layout.cshtml";
+    TempData.Keep();
+}
+
+<html>
+    <head>
+        <title>Index</title>
+    </head>
+
+    <body>
+        <div id="content">
+            @Html.Partial("SearchForm")
+            @Html.Partial("Detail")
+            <div id="blockRights" style="height: 500px;width: 285px;">
+                <div>
+                    @Html.Partial("RecentSearch")
+                    @Html.Partial("FavoriteJobs")
+                </div></div>
+            <div id="info"></div>
+        </div>
+    </body>
+</html>
+

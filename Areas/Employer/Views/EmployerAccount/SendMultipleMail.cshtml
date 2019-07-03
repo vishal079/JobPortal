@@ -1,0 +1,106 @@
+﻿@using MvcContrib.FluentHtml
+@inherits ModelWebViewPage<JobPortal.Core.Domain.User.SendMail>
+@{
+    Layout = "../../../../Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>SendMultipleMail</title>
+    </head>
+    <body>
+        @if (Model != null)
+        {
+            <div id="content" class="">
+            @using (Html.BeginForm("SendMail", "EmployerAccount", FormMethod.Post))
+            {
+                
+                    @Html.Partial("Header")
+                    <div class="employerblock  " style="height: 510px">
+                        @{      Session["ListofCandidate"] = Model.To.ToList();         }
+                        <div id="EmployerEmailDetail">    
+                            <div class="span3 form-inline"> @*control-group*@
+                                @Html.Label("Email")
+                                @Html.TextBoxFor(m => m.EMainDetail.Email)
+                            </div>
+                            <div class="span3">
+                                @Html.Label("Password")
+                                @Html.PasswordFor(m => m.EMainDetail.Password)
+                            </div> 
+                        </div>
+                
+                        <a href="#" style="display: none" id="EnterEmailDetail" onclick="No()">Add Email</a>
+                        <br/>
+                
+                        <div class="form-inline span7">
+                            <div class="control-group">
+                                <div class="controls">
+                                    <input type="radio" name="optionsRadios" id="optionsRadios1" value="false" onclick="yes()">
+                                    <label class="control-label radio"> ByCompany Email</label>
+                                </div>
+                            </div>
+                            
+                            <div class="control-group">
+                                <label class="control-label">Subject</label>
+                                <div class="control-label">
+                                    @Html.TextBoxFor(m => m.Subject)
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label">Body</label>
+                                <div class="control-label">
+                                    @Html.TextAreaFor(m => m.Body, new {@class = "ckeditor"})
+                                </div>
+                            </div>
+                            <input type="submit" class="btn btn-small btn-success" name="Send" value="Send"/>
+                            <input type="button" class="btn btn-small btn-primary" name="Preview" value="Preview"/>
+                        </div>
+                    </div>
+                    }
+                    <div class="employerRightblock" style="margin-left: 5px">
+                        @Html.Partial("RemoveCandidatefromList")
+                        @Html.Partial("AddtoCc")
+                    </div>
+                    <div id="info">
+                    </div>
+                </div>
+        }
+        else
+        {
+            <p>Your Mail is successfully send</p>
+        }
+    </body>
+</html>
+<script>
+    $(document).ready(function () {
+        $("#SeeAllCandidate").click(function () {
+            $("#SeeAllCandidate").hide();
+            $("#ListOfCandidate").slideDown("Fast");
+
+        });
+        $("#HideAllCandidate").click(function () {
+            $("#ListOfCandidate").slideUp("Fast");
+            $("#SeeAllCandidate").show();
+        });
+    });
+
+    $(document).ready(function () {
+        $(function () {
+            $(".ckeditor").CKEDITOR();
+
+        });
+    });
+    function yes() {
+        $("#EmployerEmailDetail").slideUp("Fast");
+        $("#EnterEmailDetail").show();
+    }
+
+    function No() {
+        $("#EnterEmailDetail").hide();
+        $("#EmployerEmailDetail").slideDown("Fast");
+        $("#optionsRadios1").attr('checked', false);
+    }
+</script>

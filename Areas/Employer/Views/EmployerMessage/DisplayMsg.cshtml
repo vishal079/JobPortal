@@ -1,0 +1,30 @@
+﻿@inherits MvcContrib.FluentHtml.ModelWebViewPage<JobPortal.Areas.Employer.Models.EmployerVM>
+
+
+<div id="AllMsg" style="width: 410px">
+    <table class="table table-hover" style="width: 400px;font-size: small">
+        @if(Model.PMs != null)
+        {
+            <tr style="font-weight: bold">
+                <td>Candidate</td>
+                <td>CreatedTime</td>
+                <td></td>
+            </tr>
+            foreach (var msg in Model.PMs)
+            {
+                <tr>
+                    <td>
+                        @msg.User2Name
+                    </td>
+                    <td>
+                        @msg.CreatedTime.ToShortDateString()
+                    </td>
+                    <td>
+                        @Ajax.ActionLink("show","DetailDiscussion","EmployerMessage",new {id=msg.Id},new AjaxOptions{ UpdateTargetId = "DetailDisscuss",HttpMethod = "POST"})
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+</div>
+

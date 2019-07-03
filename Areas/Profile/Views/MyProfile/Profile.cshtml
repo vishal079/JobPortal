@@ -1,0 +1,393 @@
+﻿@using JobPortal.Web
+@using JobPortal.Core
+@using JobPortal.Web.Helpers
+@using MvcContrib.FluentHtml
+@model JobPortal.Web.Areas.Profile.Models.ProfileResume
+
+@{
+    ViewBag.Title = "Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    
+    ExpYearList eyl=new ExpYearList();
+    Html.EnableUnobtrusiveJavaScript(true);
+    HtmlHelper.ClientValidationEnabled = true;
+}
+
+<style>
+#Experience
+{
+      display:initial
+}
+</style>
+<script>
+    $(document).ready(function () {
+        $("#Experienced").click(function () {
+            $("#Experience").slideDown("fast");
+
+        });
+        $("#Fresher").click(function () {
+            $("#Experience").slideUp("fast");
+        });
+
+  });
+var fixed = false;
+ $(document).scroll(function () {
+        if ($(this).scrollTop() >= 180) {
+
+            if (!fixed) {
+
+                fixed = true;
+                $('#Movable').css({ position: 'fixed', top: 10 }); // Or set top:20px; in CSS
+            }                                           // It won't matter when static
+        } else {
+            if (fixed) {
+                fixed = false;
+                $('#Movable').css({ position: 'static' });
+            }
+        }
+    });
+</script>
+
+<div id="content">
+  
+    <div id="LefttoRight"> 
+        
+        <div class="employerHeader employerFont  Post-Padding" >   
+            <h3>Change Profile</h3>
+        </div>
+        <div>
+            @Html.RenderMessages()
+            
+        </div>
+        <div class="section1 " >
+            <div id="Movable"style="width: 180px;height: 0px; font-size: 20px;">
+                <ul style="background-color: white;margin-left: 0px;padding:0px 0px 20px 0px;" >
+                    <li class="li1">
+                        <a href="#"> HOME  </a>
+                    </li>
+                    <li class="li1">
+                        <a href="@Url.Action("ProfileAccounts","MyProfile",new{area="Profile"})">PROFILE ACCOUNT</a>
+                        
+                    </li>  
+                    <li class="li1"><a href="#PersonalDetail" >Personal Detail <i class="icon-hand-right"></i> </a></li>
+                    <li class="li1"><a href="#ExperienceDetail"  >Experience Detail<i class="icon-hand-right"></i></a></li>
+                    <li class="li1"><a href="#EducationDetail">Education Detail<i class="icon-hand-right"></i></a></li>
+                    <li class="li1"><a href="#SkillDetail">Skill Detail<i class="icon-hand-right"></i></a></li>
+                    <li class="li1"><a href="#ResumeDetail">Resume Detail<i class="icon-hand-right"></i></a></li>
+                </ul>	   
+            </div>
+            <ul>
+            </ul>
+        </div>
+        <div class="section2" >
+            <div class="myprofilerequirment" style="margin-top: 1px ;">
+                <div class="myprofile_headmidleft"></div>
+                <div id="PersonalDetail" class="myprofilerequirment1"  > Personal Detail</div>
+                <div class="myprofile_headmidright"></div>
+            
+                <div class="myprofilerequirment2" style="padding-top: 1px" > </div> 
+               
+                @foreach(CandidatePersonal p in Model.CandidatePersonals)
+                {      
+                    <ul class="none_editale">
+                        <li  style="text-align: right "> 
+                            <a class="btn btn-mini btn-primary " href="@Url.Action("Edit", "MyProfile", new { area = "Profile", id = p.Id })" data-target="#EditCandidate" data-toggle="modal">
+                                Edit
+                            </a></li>
+                               
+                        <li><strong>Name</strong><em>@p.Fname</em> </li>
+                        <li><strong>EMAIL</strong><em>@p.Email</em></li>
+                        <li><strong>Mobile Number </strong><em>@p.ContactNo</em> </li>
+                        <li><strong>Current Location</strong><em>@p.City,@p.Country</em></li>
+                        <li><strong>DateOfBirth</strong><em>@p.DateOfBirth.GetValueOrDefault().ToShortDateString()</em></li>
+                        <li><strong>Gender</strong><em>@p.Gender</em></li>
+                    </ul>
+                }
+                     
+            </div>
+            <div class="myprofilerequirment" style="margin-top: 10px">
+                <div class="myprofile_headmidleft"></div>
+                <div id="ExperienceDetail" class="myprofilerequirment1"> Experience Detail</div>
+                <div class="myprofile_headmidright"></div>
+                <div class="myprofilerequirment2"></div>
+                <p style="padding-left:20px " >@this.Button("Add More Experience").Class("btn btn-success").Attr("data-toggle", "modal").Attr("href", "#AddExperience")
+                </p>
+                   
+                @{
+                    var j = 0;
+                }
+            
+                @foreach(Experience ex in Model.Experiences)
+                {
+                    var i=Model.Experiences.Count();
+                    
+                    <ul >
+                        <li style="text-align: right">
+                            @if(i==1)
+                            {
+                                <a class="btn btn-mini btn-primary " href="@Url.Action("EditExperience", "MyProfile", new {area = "Profile", id = ex.Eid})" data-target="#EditCandidate" data-toggle="modal">
+                                    Edit 
+                                </a>
+                            }   
+                            else
+                            {
+                                <a class="btn btn-mini btn-primary" href="@Url.Action("EditExperience", "MyProfile", new {area = "Profile", id = ex.Eid})" data-target="#EditCandidate" data-toggle="modal">
+                                    Edit 
+                                </a>
+     
+                                <a class="btn btn-mini btn-danger " onclick="return confirm('Are you sure you want to delete ?')" href="@Url.Action("DeleteExperience","MyProfile",new {area="Profile",id=ex.Eid})">
+                                    Delete   
+                                </a>
+                   
+                            }
+                        </li>
+                        <li><strong>Fresher/Experience</strong><em>@ex.FreExperience</em> </li>
+                        @if(ex.FreExperience!="Fresher")
+                        {
+                                   
+                            <li><strong>Job Title</strong><em>@ex.JobTitle</em> </li>
+                            <li><strong>Experience</strong><em>@ex.ExpYear (Year), @ex.ExpMonth (Month) </em></li>
+                            <li><strong>Anuual salary</strong><em>@ex.AnnualSalary</em></li>
+                        }    
+                        <li><strong>Functional Area</strong><em>@ex.FunctionalArea</em></li>
+                   
+                    </ul>
+                           
+                    if(j != 0)
+                    {
+                        <hr/>
+                    }
+                    j++;
+
+                }
+            </div>
+            <div class="myprofilerequirment" style="margin-top: 10px ">
+                <div class="myprofile_headmidleft"></div>
+                <div id="EducationDetail" class="myprofilerequirment1"> Education Detail</div>
+                <div class="myprofile_headmidright"></div>
+                <div class="myprofilerequirment2"> </div>  
+                <p style="margin-left:  20px">  @this.Button("Add More Education").Class("btn btn-success").Attr("data-toggle", "modal").Attr("href", "#AddEducation")</p>
+                @foreach(Education ed in Model.Educations)
+                {
+                    var i = Model.Educations.Count();
+                    <ul class="none_editale">
+                        <li style="text-align: right">
+                         @if(i==1)
+                         {
+                                <a class="btn btn-mini btn-primary " href="@Url.Action("EditEducation", "MyProfile", new {area = "Profile", id = ed.Eid})" data-target="#EditCandidate" data-toggle="modal">
+                                    Edit 
+                                </a>
+                         }
+                         else
+                         {
+                                <a class="btn btn-mini btn-primary " href="@Url.Action("EditEducation", "MyProfile", new {area = "Profile", id = ed.Eid})" data-target="#EditCandidate" data-toggle="modal">
+                                    Edit 
+                                </a>
+     
+                                <a class="btn btn-mini btn-danger " onclick="return confirm('Are you sure you want to delete ?')" href="@Url.Action("DeleteEducation","MyProfile",new {area="Profile",id=ed.Eid})">
+                                    Delete   
+                                </a>
+                   
+                        }
+                        </li>
+                        <li><strong>Qualification Level</strong><em>@ed.QualificationLevel</em> </li>
+                        <li><strong>Education Specification </strong><em>@ed.EducationSpecification</em> </li>
+                        <li><strong>Passing Year</strong><em>@ed.PassingYear</em></li>
+                        
+                    </ul>
+                    <hr/> 
+                }
+               
+                     
+            </div>
+        
+            <div class="myprofilerequirment" style="margin-top: 10px">
+                <div class="myprofile_headmidleft"></div>
+                <div id="SkillDetail" class="myprofilerequirment1"> Skill Detail</div>
+                <div class="myprofile_headmidright"></div>
+                <div class="myprofilerequirment2"> </div>  
+                
+                <p style="margin-left:  20px">    @this.Button("Add More Skill").Class("btn btn-success").Attr("data-toggle", "modal").Attr("href", "#AddSkill")</p>
+                
+                 @foreach (Skill sk in Model.Skills)
+                 {
+                     var i = Model.Skills.Count();
+                     <ul class="none_editale">
+                          <li style="text-align: right">
+                            @if (i == 1)
+                            {
+                                <a class="btn btn-mini btn-primary" href="@Url.Action("EditSkill", "MyProfile", new { area = "Profile", id = sk.Sid })" data-target="#EditCandidate" data-toggle="modal">
+                                    Edit 
+                                </a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-mini btn-primary" href="@Url.Action("EditSkill", "MyProfile", new { area = "Profile", id = sk.Sid })" data-target="#EditCandidate" data-toggle="modal">
+                                    Edit 
+                                </a>
+     
+                                <a class="btn btn-mini btn-danger " onclick="return confirm('Are you sure you want to delete ?')" href="@Url.Action("DeleteSkill", "MyProfile", new { area = "Profile", id = sk.Sid })">
+                                    Delete 
+                                </a>
+                            }
+                        </li>
+                        <li><strong>Skill</strong><em>@sk.SkillTerm</em> </li>
+                        <li><strong>Skill Experience </strong><em>@sk.ExpYear (Year) &nbsp;&nbsp;@sk.ExpMonth (Month)</em> </li>
+                    </ul>
+                    <hr/> 
+                }
+                </div><div class="myprofilerequirment" style="margin-top: 10px">
+                      <div class="myprofile_headmidleft"></div>
+                      <div id="ResumeDetail" class="myprofilerequirment1">Resume  Detail</div>
+                      <div class="myprofile_headmidright"></div>
+                      <div class="myprofilerequirment2"></div> 
+                
+                      @foreach (Resume sk in Model.Resumes)
+                      {
+                          <a class="btn btn-success " href="@Url.Action("ChangeResume","MyProfile",new {area="Profile", id=sk.Rid})" data-target="#EditCandidate" data-toggle="modal">Change Resume
+                          </a>
+                          <ul class="none_editale">
+                        
+                              <li><strong>Resume</strong><em>@sk.FileName</em> </li>
+                          </ul>
+                      }
+                  </div>
+        
+            @using (Html.BeginForm("AddExperience", "MyProfile", FormMethod.Post, new { id = "myForm" }))
+            {
+                 <div id="AddExperience" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="AddExperienceLabel" aria-hidden="true">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 id="AddExperienceLabel">Add Experience</h3>
+                    </div>
+                    <div class="modal-body" id="AjaxAddExperience">
+                        <div class="span5">
+                            
+                            @Html.HiddenFor(m => m.Candidate.Experience.MainUser.Mid)     
+                            
+                            <div class="form-inline">
+                                <label class="radio" >
+                                    Fresher : @Html.RadioButtonFor(m => m.Candidate.Experience.FreExperience, "Fresher", new {Id="Fresher"})
+                                </label>
+                                <label class="radio">
+                                    Experience : @Html.RadioButtonFor(m => m.Candidate.Experience.FreExperience, "Experience", new { Id="Experienced",Checked = "checked" })
+                                </label>
+                            </div>  
+                  
+                            <div id="Experience">
+            
+                                @Html.TextBoxFor(m => m.Candidate.Experience.JobTitle,new{@placeholder="JobTitle(eg.testing,designing...)"})
+                                @Html.ValidationMessageFor(m=>m.Candidate.Experience.JobTitle)
+                                @Html.DdUovFor(m => m.Candidate.Experience.ExpYear, new SelectList(eyl.GetExperience(), "value", "name"), "--Select Experience Year--",new{@class="span3"})
+                                @Html.ValidationMessageFor(m=>m.Candidate.Experience.ExpYear)
+                                @Html.DdUovFor(m => m.Candidate.Experience.ExpMonth, new SelectList(eyl.GetExpMonth(), "value", "name"), "--Select Experience Month--",new{@class="span3"})
+                                @Html.ValidationMessageFor(m=>m.Candidate.Experience.ExpMonth)
+                                @Html.DdUovFor(m => m.Candidate.Experience.AnnualSalary, new SelectList(eyl.GetAnnualSalary(), "value", "name"), "--Select salary--",new{@class="span3"})  
+                                @Html.ValidationMessageFor(m=>m.Candidate.Experience.AnnualSalary)
+                                    
+                            </div>
+                            @Html.DdUovFor(m => m.Candidate.Experience.FunctionalArea, new SelectList(eyl.GetFucArea(), "value", "name"), "--Select Function Area--", new{@class="span3"})             
+                            @Html.ValidationMessageFor(m=>m.Candidate.Experience.FunctionalArea)
+                        </div>      
+            
+                    </div>
+                        
+                    <div class="modal-footer">
+                           
+                        @this.SubmitButton("Save").Class("btn btn-primary")
+                        @this.Button("Close").Class("btn").Attr("data-dismiss", "modal").Attr("aria-hidden", "true")
+                    </div>
+
+                </div>
+            }
+            @using (Html.BeginForm("AddEducation", "MyProfile", FormMethod.Post, new { Area = "Profile" }))
+            {
+    
+                <div id="AddEducation" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="AddEducationLabel" aria-hidden="true">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 id="AddEducationLabel">Add Education</h3>
+                    </div>
+                    <div class="modal-body" id="AjaxAddEducation">
+                        <div class="span5">
+               
+                            @Html.HiddenFor(m => m.Candidate.Education.MainUser.Mid)  
+                       
+                            @Html.DdUovFor(m => m.Candidate.Education.QualificationLevel, new SelectList(eyl.GetQuaLevel(), "value", "name"), "--Select Qualification--",new{@class="span3"})
+                            @Html.ValidationMessageFor(m=>m.Candidate.Education.QualificationLevel)    
+                                
+                            @Html.DdUovFor(m => m.Candidate.Education.EducationSpecification, new SelectList(eyl.GetEduSpe(), "value", "name"), "--Select Edu Specification --", new { @class = "span3" }) 
+                            @Html.ValidationMessageFor(m=>m.Candidate.Education.EducationSpecification)
+                              
+                            @Html.DdUovFor(m => m.Candidate.Education.PassingYear, new SelectList(eyl.GetPassingYear(), "value", "name"), "--Select passing year--",new { @class = "span3" })  
+                            @Html.ValidationMessageFor(m=>m.Candidate.Education.PassingYear)
+                
+                         </div>
+                    </div>
+                    <div class="modal-footer">
+                        
+                        @this.SubmitButton("Save").Class("btn btn-primary")
+                        @this.Button("Close").Class("btn").Attr("data-dismiss", "modal").Attr("aria-hidden", "true")
+
+                    </div>
+              </div>
+            }
+            @using(Html.BeginForm("AddSkill", "MyProfile", FormMethod.Post, new { area="Profile" }))
+            {
+                <div id="AddSkill" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="AddSkillLabel" aria-hidden="true">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 id="AddSkillLabel">Add Skill</h3>
+                    </div>
+                    <div class="modal-body" id="AjaxAddSkill">
+                        <div class="span5">
+               
+                            @Html.HiddenFor(m => m.Candidate.Skill.MainUser.Mid) 
+                         
+                            @Html.TextBoxFor(m => m.Candidate.Skill.SkillTerm,new {@class="span3",@Placeholder="skill Terms(eg.php,java,android)"})
+                            @Html.ValidationMessageFor(m=>m.Candidate.Skill.SkillTerm)
+                            @Html.DropDownListFor(m => m.Candidate.Skill.ExpYear, new SelectList(eyl.GetExperience(), "value", "name"), "--Select Exp Year ", new{@class="span3"})
+                            @Html.ValidationMessageFor(m=>m.Candidate.Skill.ExpYear)
+                            @Html.DropDownListFor(m => m.Candidate.Skill.ExpMonth, new SelectList(eyl.GetExpMonth(), "value", "name"), "--Select Exp Month ", new{@class="span3"})
+                            @Html.ValidationMessageFor(m=>m.Candidate.Skill.ExpMonth)
+                  
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        @this.SubmitButton("Save").Class("btn btn-primary")
+                        @this.Button("Close").Class("btn").Attr("data-dismiss", "modal").Attr("aria-hidden", "true")
+                    </div>
+
+                </div>
+            }
+            @* first personal data change *@
+          @*  @using (Html.BeginForm("Edit", "MyProfile", FormMethod.Post, new { Area = "Profile", enctype = "multipart/form-data" }))*@
+            
+                  @*ViewContext.FormContext.ValidationSummaryId = "valSumId";
+                    @Html.ValidationSummary(false, "Please fix these errors.", new Dictionary<string, object> { { "id", "valSumId" } });
+                   *@
+               <div id="EditCandidate" class="modal  fade hide" tabindex="-1" role="dialog" aria-labelledby="EditCandidateLabel" aria-hidden="true">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 id="EditCandidateLabel">Edit Candidate</h3>
+                    </div>
+                    <div class="modal-body">
+                        
+                    </div>
+                   
+                    
+                </div>
+       </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $("a[data-target=#EditCandidate]").click(function (ev) {
+        ev.preventDefault();
+        var target = $(this).attr("href");
+
+        // load the url and show modal on success
+        $("#EditCandidate .modal-body").load(target, function () {
+            $("#EditCandidate").modal("show");
+        });
+    });
+</script>

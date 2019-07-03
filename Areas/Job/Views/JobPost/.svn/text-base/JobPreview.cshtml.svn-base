@@ -1,0 +1,64 @@
+﻿@using System.Web.Mvc
+@using Microsoft.Web.Mvc.Html
+@model JobPortal.Core.Job
+@{
+    ViewBag.Title = "JobPreview";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    
+}
+
+@using (Html.BeginForm("JobPost", "JobPost", FormMethod.Post ))
+     {
+    
+        
+         <div id="content">
+               
+             @Html.HiddenFor(m=>m.JobTitle)
+             @Html.HiddenFor(m=>m.RequiredExperiance)
+             @Html.HiddenFor(m=>m.KeyTerm)
+             @Html.HiddenFor(m=>m.IsTelecommunicateJob)
+             @Html.HiddenFor(m=>m.IsRelocationJob)
+             @Html.HiddenFor(m=>m.JobDescription)
+             @Html.HiddenFor(m=>m.SkillRequirement)
+             @Html.HiddenFor(m=>m.Country)
+             @Html.HiddenFor(m=>m.State)
+             @Html.HiddenFor(m=>m.City)
+             @Html.HiddenFor(m=>m.ZipCode)
+             @Html.HiddenFor(m=>m.Emplyer.EmployerId)
+             @Html.HiddenFor(m=>m.Emplyer.CompanyName)
+             @Html.HiddenFor(m=>m.Emplyer.CompanyUrl)
+             @Html.HiddenFor(m=>m.Emplyer.AboutCompany)
+             @Html.HiddenFor(m=>m.Emplyer.OwnerName)
+             
+             <div  style="padding-top: 30px;"></div>
+             <div class="alert alert-info" style="color: black" >
+                 <h4 style="color: black">Preview your job listing below</h4>
+                 <p style="padding-top: 20px; font-size: 14px;">Make sure everything looks correct and all the links work. Did you include all the requirements and instructions on how to apply?</p>
+                 <div style="padding-top: 13px">
+                      <button type="submit" value="? publish now" class="btn btn-success" name="postjob" ><i class="icon-ok icon-white"></i> publish now</button>
+                     <button type="submit" value="ContinueEditing" class="btn btn-primary" name="Edit"><i class="icon-pencil icon-white"></i> continue editing </button> 
+                 </div>
+             </div >
+             <div class="Post-Padding">
+                 <div>
+                     <h3 style="color: #fd8008">@Model.JobTitle</h3>
+                     
+                     <p style="font-size: 14px">  <a href="#">@Model.Emplyer.CompanyName </a> @Model.City,&nbsp;@Model.Country</p>
+            
+                 </div>
+                 <div style="padding-top: 15px;">
+                     <h4 style="color: #fd8008">Job Discription</h4>
+                     <p style="font-size: 14px;">@Model.JobDescription</p>
+                 </div>
+
+                 <div style="padding-top: 15px;">
+                     <h4 style="color: #fd8008">Skill Requirement</h4>
+                     <p style="font-size: 14px;">@Model.SkillRequirement</p>
+                 </div>
+     
+             </div>
+     
+             <div id="info"></div>
+         </div>
+   
+     }

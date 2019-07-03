@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/JobPortal/!svn/ver/118/trunk/JobPortal/Areas/Profile/Views/MyProfile
+END
+MatchJob.cshtml
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/JobPortal/!svn/ver/118/trunk/JobPortal/Areas/Profile/Views/MyProfile/MatchJob.cshtml
+END
+Add.cshtml
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/JobPortal/!svn/ver/9/trunk/JobPortal/Areas/Profile/Views/MyProfile/Add.cshtml
+END
+MatchJobDetail.cshtml
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/JobPortal/!svn/ver/37/trunk/JobPortal/Areas/Profile/Views/MyProfile/MatchJobDetail.cshtml
+END
+ApplyEdit.cshtml
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/JobPortal/!svn/ver/118/trunk/JobPortal/Areas/Profile/Views/MyProfile/ApplyEdit.cshtml
+END
+ApplyMatchJob.cshtml
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/JobPortal/!svn/ver/49/trunk/JobPortal/Areas/Profile/Views/MyProfile/ApplyMatchJob.cshtml
+END
+Profile.cshtml
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/JobPortal/!svn/ver/118/trunk/JobPortal/Areas/Profile/Views/MyProfile/Profile.cshtml
+END
+ProfileAccounts.cshtml
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/JobPortal/!svn/ver/118/trunk/JobPortal/Areas/Profile/Views/MyProfile/ProfileAccounts.cshtml
+END
+RegisterCompelete.cshtml
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/JobPortal/!svn/ver/2/trunk/JobPortal/Areas/Profile/Views/MyProfile/RegisterCompelete.cshtml
+END
+RegisterProfile.cshtml
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/JobPortal/!svn/ver/118/trunk/JobPortal/Areas/Profile/Views/MyProfile/RegisterProfile.cshtml
+END
+Edit.cshtml
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/JobPortal/!svn/ver/118/trunk/JobPortal/Areas/Profile/Views/MyProfile/Edit.cshtml
+END

@@ -1,0 +1,20 @@
+﻿@using JobPortal.Core
+@inherits MvcContrib.FluentHtml.ModelWebViewPage<JobPortal.Web.CandidateSearchModel>
+
+@{
+    ViewBag.Title = "SelectRecord";
+}
+
+
+<h2>SelectRecord</h2>
+
+@foreach(Demo d in Model.DemoList)
+{
+    @d.id
+
+    @d.name
+    
+    @d.password
+    
+}
+

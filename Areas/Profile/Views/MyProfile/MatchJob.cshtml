@@ -1,0 +1,89 @@
+﻿@using JobPortal.Core
+@using MvcContrib.FluentHtml
+@model JobPortal.Web.Areas.Profile.Models.ProfileResume
+
+
+<div class="myprofilerequirment" style="margin-top: 1px ;">
+                    <div class="myprofile_headmidleft"></div>
+                    <div class="myprofilerequirment1"  >Your Profile Matched Job  ( @ViewBag.matchCount )</div>
+                    <div class="myprofile_headmidright"></div>
+</div>
+<div id="matchedjob">
+    
+     <table  width="700px" border="0">
+       @foreach(Job j in Model.MatchJobs)
+        {
+            <tr>
+                <td  style="width:150px ;font-size:14px " id="data" title="@j.JobTitle">@Html.ActionLink(j.JobTitle, "MatchJobDetail" , new { id = j.Id})  (@j.RequiredExperiance yrs experience)</td>      
+                           
+            </tr>
+            <tr>
+                <td style="font-size: 14px" >
+                    @j.Emplyer.CompanyName  (@j.City,@j.State,@j.Country) 
+                </td>    
+            </tr>
+            <tr>
+                <td class="tbdis">
+                    @{                
+                        int length = j.JobDescription.Length;                
+                        string jobdesc = null;                
+                        for (int c = 0; c < 150; c++ )                
+                        {                
+                            if(c < length && c != 149)                
+                            {                
+                                jobdesc = jobdesc + j.JobDescription[c];                
+                            }                
+                            else                
+                            {                
+                                @jobdesc<html>....</html> 
+                                break;            
+                            }
+                        }               
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td style="width:500px ;text-align: left">
+                     <a class="btn btn-primary"  href="@Url.Action("ApplyEdit","MyProfile",new{id=j.Id} )" data-target="#EditResume" data-toggle="modal">Apply</a>
+                    <hr/>
+                </td>
+                <td style="width: 100px;text-align: right">
+                    @j.PostedTime
+                    <hr/>
+                </td>
+            </tr>
+        }   
+    </table>
+   
+ 
+     <div id="EditResume" class="modal  fade hide" tabindex="-1" role="dialog" aria-labelledby="EditResumeLabel" aria-hidden="true">
+                     <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">× </button>
+                            <h4 id="EditResumeLabel">Important! Please provide the details below</h4>
+                        </div>
+                        <div class="modal-body">
+                              
+                        </div>
+                            </div>
+    
+</div>
+
+                    
+               
+                
+
+<script type="text/javascript">
+    $("a[data-target=#EditResume]").click(function (ev) {
+        ev.preventDefault();
+        var target = $(this).attr("href");
+
+        // load the url and show modal on success
+        $("#EditResume .modal-body").load(target, function () {
+            $("#EditResume").modal("show");
+        });
+    }); 
+</script>
+
+
+
+ 

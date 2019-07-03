@@ -1,0 +1,152 @@
+﻿  @using MvcContrib.FluentHtml 
+ @inherits MvcContrib.FluentHtml.ModelWebViewPage<JobPortal.Web.Areas.Profile.Models.ProfileResume>
+
+@{
+    ViewBag.Title = "MatchJobDetail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="content">
+    <div id="LefttoRight">
+        
+        
+      
+
+        <table class="tb" border="0">
+            @{
+                <tr>
+                    <td> <p><a href="job">@Model.Job.JobTitle (@Model.Job.Emplyer.CompanyName)</a></p> </td> 
+                </tr>
+                <tr>
+                    <td class="tbcity" >@Model.Job.Country , @Model.Job.State , @Model.Job.City </td>
+                </tr>
+                <tr>
+                    @{
+                
+                        string key = null;
+                        int a = 0;
+                        int len = Model.Job.KeyTerm.Length;
+                        <td colspan="2">
+                            @do
+                            {
+                                if (Model.Job.KeyTerm[a].Equals(' ') || a == Model.Job.KeyTerm.Length)
+                                {
+                                    <a href="#" class="btn btn-mini btn-primary"> @key </a>
+                                    key = null;
+                                }
+                                else
+                                {
+                                    key = key + Model.Job.KeyTerm[a];
+                                }
+                                a++;
+                                len--;
+                            } while (len != 0);
+                            <a href="../../Areas/Search/Views/JobSearch/Index.cshtml" class="btn btn-mini btn-primary"> @key</a>
+                        </td>
+                    }
+                </tr>
+                <tr>
+                    <td class="JobDetailFont">
+                        <hr/>Job Description
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tbcity">@Model.Job.JobDescription</td>
+                </tr>
+                <tr>
+                    <td class="JobDetailFont">
+                        <hr/>Skill & Requirement
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tbcity">@Model.Job.SkillRequirement</td>
+                </tr>
+                <tr>
+                    <td class="JobDetailFont">
+                        <hr/>AboutCompany
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tbcity">@Model.Job.Emplyer.AboutCompany</td>
+                </tr>
+                <tr>
+                    @{
+                        if(Model.Job.IsTelecommunicateJob == true)
+                        {
+                            <td> <hr/>Telecommnunicate Job</td>
+                        }
+                    }
+                </tr>
+                <tr>
+                    @{
+                        if(Model.Job.IsRelocationJob == true)
+                        {
+                            <td> <hr/>Relocation Job</td>
+                        }
+                    }
+                </tr>
+            }
+        </table>
+
+        <div id="blocks">
+            <div class="tb">
+                <table>
+                    <tr>
+                        <td><hr/>
+          
+                                
+                            <a class="btn btn-primary"  href="@Url.Action("ApplyEdit","MyProfile",new{id=Model.Job.Id} )" data-target="#EditResume" data-toggle="modal">Apply</a>
+                        </td>
+                    </tr>
+                </table >
+                <table class="table">
+                    <tr>
+ 
+                        <td class="tblinks"> <p><a  href="@Url.Action("ProfileAccounts","MyProfile")"><img src="../../../Content/themes/base/images/arrow4.jpg" /> View Profile Match Job</a></p></td>
+                    </tr>
+                       
+                </table>
+            </div>
+                
+
+        </div>
+    </div>
+
+</div>
+      
+@using (Html.BeginForm("ApplyEdit", "MyProfile", FormMethod.Post, new { Area = "Profile", enctype = "multipart/form-data" }))
+{
+                    
+                    <div id="EditResume" class="modal  fade hide" tabindex="-1" role="dialog" aria-labelledby="EditResumeLabel" aria-hidden="true">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">× </button>
+                            <h4 id="EditResumeLabel">Important! Please provide the details below</h4>
+                        </div>
+                        <div class="modal-body">
+                              
+                        </div>
+                   
+                   
+                        <div class="modal-footer">
+                            @this.SubmitButton("Save").Class("btn btn-primary")
+                            @this.Button("Close").Class("btn").Attr("data-dismiss", "modal").Attr("aria-hidden", "true")
+                        </div>
+                    </div>
+                }
+
+
+
+<script type="text/javascript">
+    $("a[data-target=#EditResume]").click(function (ev) {
+        ev.preventDefault();
+        var target = $(this).attr("href");
+
+        // load the url and show modal on success
+        $("#EditResume .modal-body").load(target, function () {
+            $("#EditResume").modal("show");
+        });
+    });
+   
+   
+</script> 
+

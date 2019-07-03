@@ -1,0 +1,114 @@
+﻿<!-- Display Particular job Detail 
+     -> if user click on the link over list of job
+     -> this page will display detail of that job like jobtitle,job description, skill & requirement ect.
+     -->
+@using JobPortal.Core;
+@using MvcContrib.FluentHtml
+
+@inherits MvcContrib.FluentHtml.ModelWebViewPage<JobPortal.Areas.Job.Models.JobSearchVM>
+
+@{
+    ViewBag.Title = "JobDetailDescription";
+    Layout = "../../../../Views/Shared/_Layout.cshtml";
+    TempData.Keep();
+}
+
+<html>
+<head>
+</head>
+<body>
+    <div id="content" >
+        <div class="search" style="padding: 0px 0px 0px 15px; width: 915px">
+            <div id="LefttoRight">
+                <div class="tb">
+                    <table class="LeftRight">
+                        <tr>
+                            <td class="tblinks">
+                                 <a class="btn btn-small btn-info" href="@Url.Action("GetAllJobs","JobSearch")" style="margin-bottom: 5px"><i class="icon-backward icon-white"></i>&nbsp;&nbsp;view All Job</a>
+                              </td>
+                            <td class="tblinks" align="right">
+                                @{
+                              
+                                <a href="http://@Model.Job.Emplyer.CompanyUrl">Visit : @Model.Job.Emplyer.CompanyName</a>
+                                }
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>    
+        <div >
+            <div id="blocks" class="Post-Padding">
+                <div class="tb Post-Padding">
+                    @Html.Partial("DetailJobDescription")
+                    <br/>
+                    <table class="Post-Padding">
+                        <tr>
+                            <td>
+                                <img src="@Url.Content("../../../../Content/themes/base/images/download.gif")" style="width: 80px;height: 55px"/><br/>
+                                <a class="btn btn-small btn-primary" href="@Url.Action("Test","JobApply",new{jobId = Model.Job.Id , CompanyName = Model.Job.Emplyer.CompanyName})" data-target="#EditCandidate" data-toggle="modal">
+                                    <i class="icon-glass icon-white"></i><b>&nbsp;Apply now</b></a>
+                            </td>
+                        </tr>
+                    </table>
+                    <br/><hr/>
+                    <table>
+                        <tr>
+                             <td class="tblinks"> <p><a  href="@Url.Action("GetAllJobs","JobSearch")"><i class="icon-step-backward"></i>view All Job listing</a></p></td>
+                        </tr>
+                        <tr>
+                            <td class="tblinks"> <p><a  href="@Url.Action("SearchOnKeyterm","JobSearch",new {id=Model.Job.Emplyer.CompanyName})"><i class="icon-backward"></i> view all @Model.Job.Emplyer.CompanyName job listing</a></p></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div id="blockRights">
+            <div class="blockRight">
+                <table class="tb" >
+                    @{<tr><td class="tblinks"><a href="mailto:?subject=@Model.Job.JobTitle &body= I found this job in JobProtal: %0A %0A  @Model.Job.JobDescription "><img src="@Url.Content("../../../../Content/themes/base/images/Mailtofriend.jpg")" /> Mail to a friend </a></td></tr>}
+                    <tr><td><hr/></td></tr>
+                    <tr><td class="tblinks"><a href="#"><img src="@Url.Content("../../../Content/themes/base/images/emptystar.png")" />  Add to favorite  </a></td></tr>
+                    <tr><td><hr/></td></tr>      
+                    <tr><td class="tblinks"><a href="#"><img src="@Url.Content("../../../Content/themes/base/images/Tweetjobs.jpg")" /> Tweet this job </a></td></tr>
+                    <tr><td><hr/></td></tr>      
+                    <tr><td class="tblinks"><a href="#"><img src="@Url.Content("../../../Content/themes/base/images/facebooks.jpg")"/> Share this job on Facebook </a></td></tr>
+                    <tr><td><hr/></td></tr>      
+                    <tr><td class="tblinks"><a href="#"><img src="@Url.Content("../../../Content/themes/base/images/arrow4.jpg")" /> More Skimlinks job listings </a></td></tr>
+                    <tr><td><hr/></td></tr>      
+                </table>
+            </div>
+        </div>
+        <div id="info">
+        </div>
+    </div>
+    @using (Html.BeginForm("ApplyJob", "JobApply", FormMethod.Post,new { enctype = "multipart/form-data" }))
+{
+
+    <div id="EditCandidate" class="modal fade hide" tabindex="-1" role="dialog" aria-labelledby="EditCandidateLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="EditCandidateLabel">Applay Job</h3>
+        </div>
+        <div class="modal-body">
+        </div>
+        <div class="modal-footer">
+            @this.SubmitButton("Apply").Class("btn btn-primary").Id("Conform").OnClick("Conform()")
+            @this.Button("Cancel").Class("btn").Attr("data-dismiss", "modal").Attr("aria-hidden", "true")
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    $("a[data-target=#EditCandidate]").click(function (ev) {
+        ev.preventDefault();
+        var target = $(this).attr("href");
+
+        // load the url and show modal on success
+        $("#EditCandidate .modal-body").load(target, function () {
+            $("#EditCandidate").modal("show");
+        });
+    });
+    function Conform() {
+        alert("Are you sure");
+    }
+</script>

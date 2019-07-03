@@ -1,0 +1,199 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+
+@model JobPortal.Core.Job
+@{
+    ViewBag.Title = "PostJob";
+    Layout = "../../../../Views/Shared/_Layout.cshtml";
+    Html.EnableUnobtrusiveJavaScript(true);
+}
+<html>
+    <head>
+        <script type="text/javascript">
+        </script>
+        <script>
+            jQuery(function () {
+                //jQuery("#Key_Technologies").tagBox();
+                jQuery("#KeyTerm").tagBox();
+            });
+
+            $(document).ready(function () {
+                $(function () {
+                    $(".ckeditor").CKEDITOR();
+                });
+
+                $("#OnClickEdit").click(function () {
+                    $('#Companyname').attr("disabled", false);
+                    $('#OwnerName').attr("disabled", false);
+                    $('#URL').attr("disabled", false);
+                    // $("#editor").attr("disabled", false);
+                });
+                //$("#JobTitle").focusin(function () {
+                //    $("#JobTitle").popover({
+                //        title: "JobTitle",
+                //        content: "Finally, I can speak thanks!",
+                //        placement: 'right'
+
+                //    });
+                //});
+                ////$("#JobTitle").focusout(function () {
+                ////    $("#JobTitle").popover('hide');    
+                ////});
+
+                //$("#Companyname").focusin(function () {
+                //    $("#Companyname").popover({
+                //        title: "Company name",
+                //        content: "Finally, I can speak thanks!",
+                //        placement: 'right'
+
+                //    });
+                //});
+                //$("#Companyname").focusout(function () {
+                //    $("#Companyname").popover('hide');
+
+                //});
+
+
+            });
+        </script>
+         
+    </head>
+    <body>
+        <div id="content">
+            
+            @using (Html.BeginForm("JobPost", "JobPost", FormMethod.Post))
+            {
+              
+                           <div id="LefttoRight">           
+                            <table class="tbtitle" border="0">
+                                <tr>       <td align="left" ><h4>Creating Job Listing </h4></td> 
+                            </table>
+                            <hr /> 
+                        </div>
+                        <div class="block" >
+                   
+                        <div class="Post-Padding" >
+                            <div ><h5>Job Detail</h5></div>
+                            <div id="JobTitle" style="font-size: 14px;">
+                            <div style="padding-bottom: 5px;"> job Title &nbsp;&nbsp; @Html.ValidationMessageFor(m => m.JobTitle)</div>
+                                @Html.TextBoxFor(m => m.JobTitle, new { @placeholder = "Enter Job Title.....", @class = "input-xxlarge" })
+                                @Html.Label("Require Experiance")
+                                @Html.TextBoxFor(m => m.RequiredExperiance, new { @placeholder = "Enter Year", @class = "input-small" }) Years
+                                @Html.ValidationMessageFor(m=>m.RequiredExperiance)        
+                            </div>  
+                            <div id="Key_Technologies">
+                                @Html.Label("Key Technologies")
+                                @Html.TextBoxFor(m => m.KeyTerm, new { @class = "input-xxlarge" })
+                            </div>  
+                            <p class="hint">
+                                Examples:
+                                <span class="post-tag">ruby-on-rails</span>
+                                <span class="post-tag">jquery</span>
+                                <span class="post-tag">c#</span>
+                                <span class="post-tag">dba</span>
+                                <br class="clear">
+                            </p>
+                            
+                            <div><label class="hint">@Html.CheckBoxFor(m => m.IsTelecommunicateJob, new { @unchecked = true }) &nbsp;<b>Telecommute</b> is an option for this job. <p class="hint">Check this only if you are considering candidates who will work entirely remotely</p></label></div>
+                        
+                            <div><label class="hint">@Html.CheckBoxFor(m => m.IsRelocationJob, new { @unchecked = true }) &nbsp;We are offering<b> Relocation </b>for this job   </label></div>
+                        
+                            <div style="width: 545px">
+                                @Html.Label("Job discription")
+                             <div id="JobDiscription">   @Html.ValidationMessageFor(m => m.JobDescription)</div>
+                                @Html.TextAreaFor(m => m.JobDescription, new { @class = "ckeditor"})
+
+                            </div><br/>
+                            <div style="width: 545px">
+                                @Html.Label("Skills & requirements")
+                                @Html.TextAreaFor(m => m.SkillRequirement, new { @class = "ckeditor" })
+                            </div><br/>
+                        
+                            <div><label class="hint">@Html.CheckBoxFor(m => m.IsTelecommunicateJob, new { @unchecked = true }) &nbsp; This is a systems or database administrator position</label></div><hr/>
+                       
+                            <div><h5>Location Detail</h5></div>
+                            <div class="form-inline">
+                              @Html.Label("Country")  
+                              @Html.TextBoxFor(m => m.Country, new { @placeholder = "Enter Country name.....", @class = "input-small" })
+                              @Html.Label("State")
+                              @Html.TextBoxFor(m => m.State, new { @placeholder = "Enter state name.....", @class = "input-small" })          
+                              @Html.Label("City")
+                              @Html.TextBoxFor(m => m.City, new { @placeholder = "Enter City name.....", @class = "input-small" })
+                              @Html.Label("ZipCode")
+                              @Html.TextBoxFor(m => m.ZipCode, new { @placeholder = "Enter zip code.....", @class = "input-small" })
+                            </div> <hr/>
+                            <div class="form-inline">
+                                <label><h5>Company Detail</h5></label>
+                            </div>
+                            <div style="font-size: 14px;">
+                                @if (Model != null)
+                                {
+                                    <input type="button" id="OnClickEdit" name="OnClickEdit" value="Edit" class="btn btn-warning"/>
+                                    <div style="padding-bottom: 5px"> Copany Name &nbsp;&nbsp;@Html.ValidationMessageFor(m => m.Emplyer.CompanyName)</div>
+                                    @Html.TextBoxFor(m => m.Emplyer.CompanyName, new { @class = "input-xxlarge", disabled = "disabled", id = "Companyname" })
+                                    <div style="padding-bottom: 5px;">OwnerName &nbsp;&nbsp;@Html.ValidationMessageFor(m => m.Emplyer.OwnerName)</div>
+                                    @Html.TextBoxFor(m => m.Emplyer.OwnerName, new { @class = "input-xxlarge", disabled = "disabled", id = "OwnerName" })
+                                    <div style="padding-bottom: 5px;">Company URL &nbsp;&nbsp; @Html.ValidationMessageFor(m => m.Emplyer.CompanyUrl)</div>
+                                    <div>@Html.TextBoxFor(m => m.Emplyer.CompanyUrl, new { @class = "input-xxlarge", disabled = "disabled", id = "URL" })</div>
+                                    @Html.Label("About the company")
+                                    <div style="width: 545px" >@Html.TextAreaFor(m => m.Emplyer.AboutCompany, new { @class = "ckeditor", id = "editor" }) </div>//,,id="editor" , disabled = "disabled"
+                                }
+                                else
+                                {
+                                   <div style="padding-bottom: 5px"> Copany Name &nbsp;&nbsp;@Html.ValidationMessageFor(m => m.Emplyer.CompanyName)</div>
+                                    @Html.TextBoxFor(m => m.Emplyer.CompanyName, new { @placeholder = "Enter Company name.....", @class = "input-xxlarge" })
+                                    <div style="padding-bottom: 5px;">OwnerName &nbsp;&nbsp;@Html.ValidationMessageFor(m => m.Emplyer.OwnerName)</div>
+                                    @Html.TextBoxFor(m => m.Emplyer.OwnerName, new { @placeholder = "Enter Company name.....", @class = "input-xxlarge" })
+                                    <div style="padding-bottom: 5px;">Company URL &nbsp;&nbsp; @Html.ValidationMessageFor(m => m.Emplyer.CompanyUrl)</div>
+                                    <div>@Html.TextBoxFor(m => m.Emplyer.CompanyUrl, new { @placeholder = "www.CompanuURL.com", @class = "input-xxlarge" })</div>
+                                    @Html.Label("About the company")
+                                    <div style="width: 545px">@Html.TextAreaFor(m => m.Emplyer.AboutCompany, new { @placeholder = "About Company", @class = "ckeditor" })  </div>
+                                }
+                            </div><br/><br/>
+                            <div style="padding-bottom: 13px">
+                            <button type="submit"  name="postjob" value="publish now" class="btn btn-success"><i class="icon-ok icon-white"></i> publish now</button>  
+                            <button type="submit" name="previewjob" value="Preview" class="btn btn-primary"><i class="icon-pencil icon-white"></i> Preview </button>
+                            </div>
+                        </div>
+                </div>
+
+                <div id="blockRights">
+                    <div class="blockRight">
+                        <div class="action">
+                            action   
+                        </div>
+                        <div class="Post-Padding">
+                            
+                        @*    <input type="submit" value="? publish now" class="btn btn-success"  />*@
+                           <div style="padding-bottom: 13px;">  <button type="submit" name="postjob" value="publish now" class="btn btn-success"><i class="icon-ok icon-white"></i> publish now</button>  </div>
+                          <div style="padding-bottom: 13px">   <button type="submit" name="previewjob" value="Preview" class="btn btn-primary"><i class="icon-pencil icon-white"></i> Preview </button></div>
+                           <div> @Html.ValidationSummary(true, "pleaze review form") </div> 
+                        </div>
+         
+                       <div class="action">
+                            pre-purchase listing    
+                        </div>
+                        <div class="Post-Padding" >
+                            @Html.ActionLink("? buy first", "JobPost", new { area = "Job", Controller = "JobPost" }, new { @class = "btn btn-primary" })
+                            <div style="padding-top: 13px; padding-bottom: 20px"> <label> If you prefer to purchase a single or multiple listings before filling out the form.</label>    </div>
+                        </div>
+                                                                                                     
+                        <div class="action">
+                            pricing  
+                        </div>
+                        <div class="Post-Padding" >
+                            <table class="table table-hover" style="font-size: 12px;"><tr ><th>#of listing</th> <th>price per listing     </th></tr>
+                                <tr><td>    1-4    </td>  <td>   $350               </td></tr>     
+                                <tr><td>    5-9    </td>  <td>   $315(10% Discoount)</td></tr>     
+                                <tr><td>    10+    </td>  <td>   $280(20% Discount) </td></tr>   
+                              
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div id="info">
+                </div>
+                }
+        </div>
+    </body>
+</html>

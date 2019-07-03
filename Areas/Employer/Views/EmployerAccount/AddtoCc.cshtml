@@ -1,0 +1,31 @@
+﻿@using JobPortal.Web.Helpers
+@using MvcContrib.FluentHtml
+@inherits MvcContrib.FluentHtml.ModelWebViewPage<JobPortal.Core.Domain.User.SendMail>
+<div class="employerRightblock" id="addcc" style=" width: 270px;margin-left: 0px">
+    <table class="table table-hover table-striped table-bordered" style="width: 269px;padding-top: 5px;margin-bottom: 5px">
+        <tr><td colspan="3">Add to CC</td></tr>
+        @if(Model.Cc != null)
+        {
+            TempData["CC"] = Model.Cc;
+            for (int i = 0; i < Model.Cc.Count; i++)
+            {
+                <tr>
+                    <td>    @{     var count = i + 1; @count   }               </td>
+                    <td>    @Html.DisplayFor(m => m.Cc[i])                     </td>
+                    <td>
+                        @Ajax.ImageActionLink("../../../../Content/themes/base/images/RemoveIcon.jpg",".", "RemoveCc",new {email = Model.Cc[i]}, new AjaxOptions() {UpdateTargetId = "addcc", HttpMethod = "GET"}, new {@class = "icon-remove"})
+                    </td>
+                </tr>
+            }
+        }
+        <tr><td colspan="3" class="pull-center">    
+            @using (Ajax.BeginForm("AddtoCc", "EmployerAccount", new AjaxOptions { HttpMethod = "POST",
+                                                                                   InsertionMode = InsertionMode.Replace, UpdateTargetId = "addcc", LoadingElementId = "div_loading" }))
+            {
+                <div class="form-inline">
+                    @Html.TextBox("email")
+                    <input type="submit" class="btn btn-small btn-info" value="Add" name="Add"/>
+                </div>
+            }
+    </table>
+</div>

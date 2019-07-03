@@ -1,0 +1,6 @@
+﻿@{
+    ViewBag.Title = "registerCompelete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>registerCompelete</h2>

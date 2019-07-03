@@ -1,0 +1,98 @@
+﻿@using JobPortal.Core
+
+@inherits MvcContrib.FluentHtml.ModelWebViewPage<JobPortal.Areas.Job.Models.JobSearchVM>
+<html>
+    <head>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $(window).scrollTop(0);
+                BindSpinner();
+            });
+            function BindSpinner() {
+                $("#div_loading").bind("ajaxSend", function () {
+                    $(this).show();
+                    //$('html, body').animate({ scrollTop: $('#loadMore').offset().top }, 2000);
+                    //$(window).scrollTop(0);
+                    //document.body.scrollTop = Document.documentElement.scrollTop = 0;
+                    //top.location.href = "#content";
+                    //$(document).scrollTop(0);
+                    //$(window).scrollTop(0);
+                    //$("body").scrollTop(0);
+                }).bind("ajaxStop", function () {
+                    $(this).hide();
+                    scrollTop();
+                }).bind("ajaxError", function () {
+                    $(this).hide();
+                });
+            }
+            function scrollTop() {
+                window.document.body.scrollTop = 0;
+                window.document.documentElement.scrollTop = 0;
+            }
+        </script>
+    </head>
+    <body></body>
+</html>              
+@{
+    using (Html.BeginForm("Index", "JobSearch", FormMethod.Post))
+    {
+        int currentPage = Model.Job.PageIndex;
+        int totalRecords = Model.Job.TotalRecord;
+        
+        string key = Model.Job.KeyTerm;
+        string loc = Model.Job.Country;
+        string orderBy = Model.Job.OrderBy;
+        Boolean isTelecommunicate = Model.Job.IsTelecommunicateJob;
+        Boolean isRelocation = Model.Job.IsRelocationJob;
+        
+        <list>
+            @if (currentPage > 0)
+            {
+                @Ajax.ActionLink("Prev", "PageIndex", "JobSearch",new{id = currentPage - 1, What = key, Where = loc ,
+                    
+                sortBy = orderBy,isTelecommunicateJob = isTelecommunicate,isRelocationJob = isRelocation },
+                    
+                new AjaxOptions() { UpdateTargetId="DetailUpdate",  HttpMethod="GET"},new{@class = "btn"})<html>&nbsp;</html>
+                
+                /**** Simple Html Link ****/
+                
+                /*@Html.ActionLink("Prev", "PageIndex", "JobSearch", new {id = currentPage - 1, What = key, Where = loc,sortBy = orderBy,
+                isTelecommunicateJob = isTelecommunicate,isRelocationJob = isRelocation},new {@class = "btn"})<html>&nbsp;</html>*/
+            }
+            @for (int i = 1; i < totalRecords/5 + 1; i++)
+            {
+                if (currentPage == i - 1)
+                {
+                    @Html.ActionLink(""+i,"PageIndex",new {disable = "disable"},new{@class = "btn",@title = "You are on same page" ,onclick = "javascript:return false;" ,style="background: darkorange"})<html>&nbsp;</html>
+                }
+                else
+                {
+                    @Ajax.ActionLink("" + i, "PageIndex", "JobSearch",new{id = i - 1, What = key, Where = loc ,
+                    
+                    sortBy = orderBy,isTelecommunicateJob = isTelecommunicate,isRelocationJob = isRelocation },
+                    
+                    new AjaxOptions() { HttpMethod="GET",InsertionMode = InsertionMode.Replace,UpdateTargetId="DetailUpdate",LoadingElementId = "div_loading"},new{@class = "btn",id="button"})<html>&nbsp;</html>
+                    
+                    
+                    /**** Simple Html Link ****/
+                    
+                    /*@Html.ActionLink("" + i, "PageIndex", "JobSearch", new {id = i - 1, What = key, Where = loc ,
+                    sortBy = orderBy,isTelecommunicateJob = isTelecommunicate,isRelocationJob = isRelocation},new {@class = "btn"})*/
+                }
+            }
+            @if (totalRecords > (currentPage + 1) * 5)
+            {
+                    @Ajax.ActionLink("Next", "PageIndex", "JobSearch",new{id = currentPage + 1, What = key, Where = loc ,
+                    
+                    sortBy = orderBy,isTelecommunicateJob = isTelecommunicate,isRelocationJob = isRelocation },
+                    
+                    new AjaxOptions() { UpdateTargetId="DetailUpdate",  HttpMethod="GET"},new{@class = "btn"})<html>&nbsp;</html>
+                
+                    /**** Simple Html Link ****/
+                
+                    /*@Html.ActionLink("next", "PageIndex", "JobSearch", new {id = currentPage + 1, What = key, Where = loc,sortBy = orderBy,
+                    isTelecommunicateJob = isTelecommunicate,isRelocationJob = isRelocation},new {@class = "btn"})*/
+            }
+        </list>
+    }
+}

@@ -1,0 +1,11 @@
+﻿@using System.Drawing
+@model JobPortal.Web.Areas.Search.Models.ResumeUpload
+@{
+    ViewBag.Title = "RetriveFile";
+}
+<div>
+    <img src="@Model.getimg()"/>
+    <img src="@Url.Action("RetriveFile","JobSearch",new {id = 2})" alt="Loading..."/>
+</div>
+
+

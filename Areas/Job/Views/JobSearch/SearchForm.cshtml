@@ -1,0 +1,182 @@
+﻿@using JobPortal.Core
+
+@inherits MvcContrib.FluentHtml.ModelWebViewPage<JobPortal.Areas.Job.Models.JobSearchVM>
+<html>
+    <head>
+        <style> 
+               .input-medium  
+               {
+                     background-color: #ffffff;
+                }
+        </style>
+        <link href="@Url.Content("../../../../Content/style.css")" rel="stylesheet" />
+        <script src="@Url.Content("../../../../Scripts/jquery-1.7.1.min.js")"></script>
+        <script src="../../../../Scripts/jquery.autocomplete.js"></script>
+        <link href="../../../../Content/jquery.autocomplete.css" rel="stylesheet" />
+        <link href="@Url.Content("../../../../Content/bootstrap.css")" rel="stylesheet" />
+        <script>
+            $(document).ready(function () {
+                $("#A_Search").click(function () {
+                    $("#btn").hide();
+                    $("#A_Search").hide();
+                    $("#AdvanceSearch").slideDown("slow");
+
+                });
+                $("#S_Search").click(function () {
+                    $("#AdvanceSearch").slideUp("slow");
+                    $("#btn").show();
+                    $("#A_Search").show();
+                });
+
+                BindSpinner();
+            });
+            function BindSpinner() {
+                $("#div_loading").bind("ajaxSend", function() {
+                    $(this).show();
+                }).bind("ajaxStop", function() {
+                    $(this).hide();
+                }).bind("ajaxError", function() {
+                    $(this).hide();
+                });
+            }
+
+                            @*var url = '@Url.Action("Lookup", "JobSearch", new {id = "j"})';
+        $('#Job_KeyTerm').autocomplete('@Url.Action("Lookup", "JobSearch", new {id = "j"})', {
+            dataType : 'json',
+            minChars: 1,
+            multiple: true,
+            formatResult: function (row) {
+                return row[0].replace(/(<.+?>)/gi, '');
+            }
+        }).result(function (event, data, formatted) {
+            alert(!data ? "No match!" : "Selected: " + formatted);
+        });*@
+            @*var v = $("#Job_KeyTerm").val();
+            $(document).ready(function () {
+                $("#Job_KeyTerm").autocomplete('@Url.Action("Lookup", "JobSearch")',
+                    {
+                
+                        data : $("#Job_KeyTerm").val(),
+                        dataType: 'json',
+                        parse: function (data) {
+                            var rows = new Array();
+                            for (var i = 0; i < data.length; i++) {
+                                rows[i] = { data: data[i], value: data[i].Tag, result: data[i].Tag };
+                            }
+                            return $.post(rows,v);
+                        },
+                        formatItem: function (row, i, max) {
+                            return row.Tag;
+                        },
+                        width: 300,
+                        highlight: false,
+                        multiple: true,
+                        multipleSeparator: ","
+                    });
+            });*@
+        </script>
+    </head>
+<body>
+    <div class="search">
+        <div style="margin-left: 10px">
+            @using (Ajax.BeginForm("AjaxSearch", "JobSearch",
+                                   new AjaxOptions
+                                       {
+                                           HttpMethod = "POST",
+                                           InsertionMode = InsertionMode.Replace,
+                                           UpdateTargetId = "DetailUpdate",
+                                           LoadingElementId = "div_loading"
+                                       }))
+            {
+                Search search = new Search();
+                <img src= "@Url.Content("~/Content/themes/base/images/title.gif")"  width="90" height="30" style="padding-top: 22px" />
+                @*<div id="div_loading" style="margin: 0px; padding: 0px; position: fixed; right: 0px;
+                top: 0px; width: 100%; height: 100%; background-color: #666666; z-index: 30001;
+                opacity: .8; filter: alpha(opacity=70);display:none" >
+                <p style="position: absolute; top: 30%; left: 45%; color: White;">
+                        Loading, please wait...<img src="../../../../Content/themes/base/images/ajax-loading.gif" />
+                </p>
+                </div>*@
+                /*<div id="div_loading" style="display: none">
+                    Loading ...
+                </div>*/
+                <div>
+                    <div id="Simple Search">
+                        <div class="span4">
+                            @Html.Label("what")
+                            @Html.TextBoxFor(model => model.Job.KeyTerm, new { placeholder = "Jobtitle, Keyword, or Company", @class = "input-medium", @id = "Job_KeyTerm" })
+                        </div>
+                        <div class="span5">
+                            @Html.Label("where")
+                            @Html.TextBoxFor(model => model.Job.Country, new { placeholder = "Country, State, City, or ZipCode", @class = "input-medium" })
+                            <input id="btn" type="submit" value="Search" class="btn btn-warning" />
+                            <a id="A_Search" href="#"><b>Go Advance</b></a>
+                        </div>
+                    </div>
+                    &nbsp;<hr style="margin-top: 1px;margin-bottom: 1px"/>
+                    <div id="AdvanceSearch">
+                        <div class="span3">
+                            <h6>@Html.Label("sort by")  @Html.DropDownListFor(model => model.Job.OrderBy, new SelectList(search.GetSortList(), "id", "name"))</h6>
+                        </div>
+                        <div class="span3">
+                            <h6>@Html.Label("Minimum experiance")  @Html.DropDownListFor(model => model.Job.OrderBy, new SelectList(search.GetSortList(), "id", "name"))</h6>
+                        </div>
+                        <div class="span4" style="margin-top: 10px;width: 310px">
+                            <label style="margin-top: 10px">@Html.CheckBoxFor(model => model.Job.IsTelecommunicateJob, new { @unchecked = true }) &nbsp;Telecommunicate Job</label>
+                            <label>@Html.CheckBoxFor(model => model.Job.IsRelocationJob, new { @unchecked = true }) &nbsp;Relocation Job</label>
+                        </div>
+                        &nbsp;<hr style="margin-top: 1px;margin-bottom: 5px"/>
+                        <div>
+                            <input type="submit" value="Search" style="margin-left: 330px" class="btnsearch" />
+                            <a id="S_Search" href="#"><b>Simple Search</b></a>
+                        </div>
+                    </div>
+                </div>
+            }
+            @*@using (Html.BeginForm("Index", "JobSearch", FormMethod.Post))
+            {
+                Search search = new Search();
+                <img src= "@Url.Content("~/Content/themes/base/images/title.gif")"  width="90" height="30" style="padding-top: 22px" />
+                <div class="span4">
+                    @if (Model.Job.KeyTerm != null)
+                    {
+                        @Html.Label("what")
+                        @Html.TextBoxFor(model => model.Job.KeyTerm, new { placeholder = ViewBag.what, @class = "input-medium search-query", @id = "Job_KeyTerm" })
+                    }
+                    else
+                    {
+                        @Html.Label("what")
+                        @Html.TextBoxFor(model => model.Job.KeyTerm, new { placeholder = "Jobtitle, Keyword, or Company", @class = "input-medium search-query", @id = "Job_KeyTerm" })
+                    }
+                </div>
+                    if (Model.Job.Country != null)
+                    {
+                    @Html.Label("where")
+                    @Html.TextBoxFor(model => model.Job.Country, new { placeholder = ViewBag.where, @class = "input-medium search-query" })
+                    }
+                    else
+                    {
+                    @Html.Label("where")
+                    @Html.TextBoxFor(model => model.Job.Country, new { placeholder = "Country, State, City, or ZipCode", @class = "input-medium search-query" })
+                    }
+                <input id="btn" type="submit" value="Search" class="btn btn-warning" />
+                <a id="A_Search" href="#"><b>Advance Search</b></a>
+                <div id="AdvanceSearch">
+                    <hr />
+                    <div class="span5">
+                        <h5 style="padding-left: 35px">sort by: @Html.DropDownListFor(model => model.Job.OrderBy, new SelectList(search.GetSortList(), "id", "name"))</h5>
+                    </div>
+                    <label style="padding-left: 415px">@Html.CheckBoxFor(model => model.Job.IsTelecommunicateJob, new { @unchecked = true }) &nbsp;Telecommunicate Job</label>
+                    <label style="padding-left: 415px">@Html.CheckBoxFor(model => model.Job.IsRelocationJob, new { @unchecked = true }) &nbsp;Relocation Job</label>
+
+                    <div>
+                        <hr />
+                        <input type="submit" value="Search" style="margin-left: 330px" class="btnsearch" />
+                        <a id="S_Search" href="#"><b>Simple Search</b></a>
+                    </div>
+                </div>
+            }*@
+        </div>
+    </div>
+</body>
+</html>

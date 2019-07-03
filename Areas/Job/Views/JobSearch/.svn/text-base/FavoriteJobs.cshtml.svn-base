@@ -1,0 +1,49 @@
+﻿@using JobPortal.Core
+@using JobPortal.Web.Helpers
+
+<div id="FavoriteJobs">
+<div class="RecentjobBorder" style="margin-top: 10px">
+    <table id="datatable">
+        <tr class="RecentJob">
+            <td id="faverite" style="width: 275px">@Model.FavJobs.Count &nbsp; Favorite Jobs </td>
+            @*<td style="width: 30px"></td>*@
+        </tr>
+    </table>
+    <table>
+        @*<tr id="data">
+            <td colspan="1">*@
+        @inherits MvcContrib.FluentHtml.ModelWebViewPage<JobPortal.Areas.Job.Models.JobSearchVM>
+        @if (Model.FavJobs != null)
+        {
+            for (int i = 0; i < 4 ; i++ )
+            {
+                if(i <= Model.FavJobs.Count - 1)
+                {
+                    <tr class="btn-small" style="padding-top: 15px">
+                        <td class="Small-Post-Padding">
+                            <i class="icon-hand-right"></i>
+                        </td>
+                        <td class="Small-Post-Padding">
+                            @*@Model.FavJobs[i].JobTitle from country @Model.FavJobs[i].CompanyName*@
+                            @Html.ActionLink("'"+@Model.FavJobs[i].JobTitle+"' from country"+@Model.FavJobs[i].CompanyName+"'", "JobDetail", new { Id = Model.FavJobs[i].Job.Id })
+                        </td>
+                        <td>
+                            @*@Ajax.ActionLink("R", "RemoveFavoriteJob", "JobSearch", new {jobId = Model.FavJobs[i].FavoriteJobId,removeType = true}, new AjaxOptions() {UpdateTargetId = "FavoriteJobs", HttpMethod = "POST"}, new {@class = "btn-small btn-link"})*@
+                            @Ajax.ImageActionLink("../../../../Content/themes/base/images/delete_icon1.png", "RemoveFavJob", "RemoveFavoriteJob", new {jobId = Model.FavJobs[i].FavoriteJobId, removeType = true},
+                                                  new AjaxOptions() {UpdateTargetId = "FavoriteJobs", HttpMethod = "GET"},new {@class = "btn-large"})
+                        </td>
+                    </tr>
+                    @*<img src="../../../../Content/themes/base/images/Delete-Icon.jpg" />*@
+                }
+            }
+            if(Model.FavJobs.Count > 4)
+            {<tr><td>
+                     @Html.ActionLink("view all favorites...","FavJob","JobSearch")
+                 </td></tr>
+            }
+        }
+        @*</td>
+        </tr>*@
+    </table>
+</div>
+</div>

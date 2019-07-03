@@ -1,0 +1,65 @@
+﻿@using JobPortal.Core
+@model JobPortal.Web.Areas.Profile.Models.ProfileResume
+
+
+
+@*<div id="applyedjob">
+
+    <h1> hellloooooo </h1>
+    
+    @foreach(Job j in Model.MatchJobs)
+    {
+        @j.City
+        @j.Country
+    }
+
+</div>
+*@
+<div class="myprofilerequirment" style="margin-top: 1px ;">
+                    <div class="myprofile_headmidleft"></div>
+                    <div class="myprofilerequirment1"  >Your Applied Job  ( @ViewBag.appliedCount )</div>
+                    <div class="myprofile_headmidright"></div>
+</div>
+   
+<div id="matchedjob">
+    
+    <table  width="700px" border="0">
+               
+        @foreach(Job j in Model.MatchJobs)
+        {
+            <tr>
+                <td  style="width:150px ;font-size:14px " id="data" title="@j.JobTitle">@Html.ActionLink(j.JobTitle, "", new { Id = j.Id })  (@j.RequiredExperiance yrs experience)</td>      
+                           
+            </tr>
+            <tr>
+                <td style="font-size: 14px" >
+                    @j.Emplyer.CompanyName  (@j.City,@j.State,@j.Country) 
+                </td>    
+            </tr>
+            <tr>
+                <td class="tbdis">
+                    @{                
+                        int length = j.JobDescription.Length;                
+                        string jobdesc = null;                
+                        for (int c = 0; c < 150; c++ )                
+                        {                
+                            if(c < length && c != 149)                
+                            {                
+                                jobdesc = jobdesc + j.JobDescription[c];                
+                            }                
+                            else                
+                            {                
+                                @jobdesc<html>....</html> 
+                                break;            
+                            }
+                        }               
+                    }
+                <hr/>                           
+                </td>
+                
+            </tr>
+                
+        }   
+                  
+    </table>
+</div>

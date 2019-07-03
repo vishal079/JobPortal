@@ -1,0 +1,46 @@
+﻿@using JobPortal.Core
+
+@inherits MvcContrib.FluentHtml.ModelViewPage<JobPortal.Areas.Admin.Models.AdminVM>
+
+@{
+    ViewBag.Title = "AdminPageIndex";
+}
+<h2>sanjay</h2>
+@{
+
+    using (Html.BeginForm("GetJob","Admin",FormMethod.Post))
+    {
+        int currentPage = Model.Job.PageIndex;
+        int totalRecords = Model.Job.TotalRecord;
+        <list>
+            @if (currentPage > 0)
+            {
+                @Ajax.ActionLink("Prev","AdminPageIndex","Admin",new {id=currentPage-1},new AjaxOptions(){UpdateTargetId = "DetailUpdate", HttpMethod ="GET"},new {@class="btn"})<html>&nbsp;</html>
+                
+            }
+            @for (int i = 1; i < totalRecords/5 + 1; i++)
+            {
+                if (currentPage == i - 1)
+                {
+                    @Html.ActionLink(""+i,"AdminPageIndex",new {disable = "disable"},new{@class = "btn",@title = "You are on same page" ,onclick = "javascript:return false;" ,style="background: darkorange"})<html>&nbsp;</html>
+                }
+                else
+                {
+                    @Ajax.ActionLink("" + i, "AdminPageIndex", "Admin",new{id = i - 1},
+                    
+                    new AjaxOptions() { UpdateTargetId="DetailUpdate",  HttpMethod="GET"},new{@class = "btn",id="button"}) <html>&nbsp;</html>
+                }
+            }
+            @if (totalRecords > (currentPage + 1) * 5)
+            {
+                    @Ajax.ActionLink("Next", "AdminPageIndex", "Admin",new{id = currentPage + 1},
+                    
+                    new AjaxOptions() { UpdateTargetId="DetailUpdate",  HttpMethod="GET"},new{@class = "btn"})<html>&nbsp;</html>
+                   
+            }
+
+        </list>
+    }
+    
+    
+}

@@ -1,0 +1,81 @@
+﻿@using JobPortal.Core
+@inherits MvcContrib.FluentHtml.ModelWebViewPage<JobPortal.Web.CandidateSearchModel>
+@{
+    ViewBag.Title = "CandidateList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ExpYearList eyl=new ExpYearList();
+    
+    Html.EnableUnobtrusiveJavaScript(false);
+}
+<html>
+    
+    <head>
+        <title></title> 
+    </head>
+  
+     <script>
+        $(document).ready(function () {
+            $("#A_Search").click(function () {
+                $("#btn").hide();
+                $("#A_Search").hide();
+                $("#AdvanceSearch").slideDown("slow");
+
+            });
+            $("#S_Search").click(function () {
+                $("#AdvanceSearch").slideUp("slow");
+                $("#btn").show();
+                $("#A_Search").show();
+            });
+        });
+        </script>
+    <body class="">    
+        <div id="content">
+            @Html.Partial("Header")
+            <div class="search">
+                @using (Html.BeginForm("CandidateList", "CandidateSearch", new { area = "Candidate", Controller = "CandidateSearch" }, FormMethod.Post))
+                {
+                    <img src=@Url.Content("../../Content/themes/base/images/title.gif")  width="90" height="30" style="padding-top: 22px;" />
+                                
+                    <div class="span4">
+                        @Html.Label("Skill")
+                        @Html.TextBoxFor(model => model.AddPersonal.Skill.SkillTerm, new { placeholder = "skill(e.g. java,php,tester,.net,etc.)", @class = "input-medium search-query" })
+                    </div>
+                    @Html.Label("Location")
+                    @Html.TextBoxFor(model => model.AddPersonal.City, new { placeholder = "location(india,america,new york)", @class = "input-medium search-query" })
+                                
+                    <input id="btn" type="submit" value="Search" class="btn btn-warning" />
+                                
+                              
+                    <a id="A_Search" href="#"><b>Advance Search</b></a>
+                    <div id="AdvanceSearch">
+                        <hr />
+                        <div class="span5">
+                                        
+                            <h5 style="padding-left: 35px">Functional Area: @Html.DropDownListFor(model => model.AddPersonal.Experience.FunctionalArea, new SelectList(eyl.GetFucArea(), "value", "name"),"--Select FunctionalArea--",null)</h5>
+                        </div>
+                        <label style="padding-left: 415px">Minimum Experience: @Html.DropDownListFor(model => model.AddPersonal.Experience.ExpYear, new SelectList(eyl.GetExperience(), "value", "name"),"--Select MinimumExperience--",null)</label>
+                                
+                        <div>
+                            <hr />
+                            <input type="submit" value="Search" style="margin-left: 330px" class="btnsearch" />
+                            <a id="S_Search" href="#"><b>Simple Search</b></a>
+                        </div>
+                    </div>
+                                
+                }
+            </div> 
+                    
+            @Html.Partial("ShortDetail")
+            <div class="info"></div> 
+        </div>
+ 
+            
+ </body>
+ 
+</html>
+
+
+
+
+
+

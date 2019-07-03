@@ -1,0 +1,26 @@
+class demo
+{	
+
+	int i = 0;
+	public demo()
+	{
+		int i = 1;
+	}
+
+	public int Display()
+	{
+		Return (i);
+	}
+<<<<<<< .mine
+
+	public void GetValue()
+	{
+		/* Get Value From Database*/
+	}
+=======
+    public int show()
+    {
+        return null;
+    }
+>>>>>>> .r84
+}

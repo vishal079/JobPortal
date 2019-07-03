@@ -1,0 +1,17 @@
+﻿@{
+    ViewBag.Title = "Thank You";
+    Layout = "../../../../Views/Shared/_Layout.cshtml";
+}
+
+<html>
+<head>
+    <link href="@Url.Content("~/Content/style.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/bootstrap.css")" rel="stylesheet" />
+    
+</head>
+<body>
+    <div id="content">
+        <h3>Thank you for Applay</h3>
+    </div>
+</body>
+</html>

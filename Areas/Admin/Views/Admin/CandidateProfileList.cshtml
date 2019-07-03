@@ -1,0 +1,134 @@
+﻿
+@using JobPortal.Core
+
+
+
+@inherits MvcContrib.FluentHtml.ModelWebViewPage<JobPortal.Web.CandidateSearchModel>
+
+@{
+    ViewBag.Title = "CandidateProfileList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<html>
+    
+    <head>
+        <title></title>
+
+ 
+        @*<link href="../../../Candidate/Views/../../../Content/style.css" rel="stylesheet" />
+        <link href="../../../Candidate/Views/../../../Content/bootstrap.css" rel="stylesheet" />
+        <script src="../../../Candidate/Views/../../../Scripts/jquery-1.8.3.min.js"></script>*@
+      @*  <link href="../../../Candidate/Views/../../../Content/bootstrap.min.css" rel="stylesheet" />*@
+        
+    </head>
+    
+    <body class="">    
+        <div id="content">
+         <div id="LefttoRight" style="height: 42px;">
+            <div class="navbar " style="font-size:15px;">
+              <div class="navbar-inner">
+    
+                 <ul class="nav">
+                    <li>
+                        @Html.ActionLink("JobDetail","GetJob",new{area="Admin",Controller="Admin"},new {id="abc"})   
+                        @*<a href="#">Job</a>*@
+                   </li>
+                    <li>
+                        @Html.ActionLink("CandidateDetail","CandidateProfileList",new {area="Admin",Controller="Admin"},new {id="def"})
+                        @*<a href="#"></a>*@
+                    </li>
+                     <li style="margin-left: 380px;">
+                      
+                         @Html.ActionLink("sign-out","Login",new {area="Admin",Controller="Admin"})
+                     </li>
+ 
+                </ul>
+            </div>
+        </div>
+
+            </div>
+            
+            <div id="LefttoRight" style="padding-top: 15px;">
+                <table class="tbtitle">
+                    <tr>
+                        <td><h4>&nbsp;&nbsp; @ViewBag.count &nbsp;&nbsp;Candidate found</h4></td>
+                    </tr>
+                </table>
+                        
+                <table class="table table-striped table-hover" style="font-size: 14px">
+                    <tbody>
+                        @foreach (CandidatePersonal candidate in Model.PersonalList)
+                        {
+                            <tr onclick =" javascript:$.post('@Url.Action("CandidateDetail", "CandidateSearch", new { Area = "Employer" })'); ">
+                                <td class="span10">
+                                    <div>
+                                        <h5><i class="icon-user"></i> @candidate.Fname &nbsp; &nbsp;
+                                            <small><strong>Email &nbsp;</strong> @candidate.Email</small> &nbsp;          
+                                            <small><strong>Age &nbsp;</strong>@candidate.Age.ToString(1,false)</small> &nbsp;
+                                            <small><strong>Birth Date &nbsp;</strong>@candidate.DateOfBirth.GetValueOrDefault().ToShortDateString()</small>&nbsp;
+                                            <small><strong>Gender&nbsp;</strong>@candidate.Gender</small>&nbsp;                               
+                                                       
+                                        </h5>
+                                    </div>
+                                    <div>
+                                        <p class="span2">@candidate.City,@candidate.Country</p>
+                                        <p class="span2"><i class="icon-user"></i>@candidate.ContactNo</p>
+                                                     
+                                                        
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <p class="span3"><div></div>
+                                            <small>Created:<em>@if (candidate.CreatedOn != null)
+                                                               {
+                                                                   @candidate.CreatedOn.Value.ToString("dd-MMM-yyyy")
+                                                               }
+                                                               Update:@if (candidate.UpdatedOn != null)
+                                                                      {
+                                                                          @candidate.UpdatedOn.Value.ToString("dd-MMM-yyyy")
+                                                                      }
+                                                        
+                                                           </em>
+                                            </small>
+                                        </p>
+                                    </div>
+                                                 
+                                    <div ><p >
+                                              <a class="btn btn-small btn-danger" onclick = "return confirm('Are you sure you want to delete?')" href="@Url.Action("DeleteProfile", "Admin", new {area = "Admin", Id =candidate.MainUser.Mid,})">
+                                                  <i class="icon-remove-sign icon-white"></i>
+                                              </a> 
+                                              <a class="btn btn-small btn-primary"  href="@Url.Action("CandidateProfileDetail", "Admin", new {area = "Admin", Id = candidate.MainUser.Mid})">
+                                                  <i class="icon-hand-right icon-white"></i>
+                                              </a>
+                                          </p></div>
+                                </td>
+                                            
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                             
+            </div>
+            <div class="pagination">
+                pagination here
+            </div>
+            
+
+            <div id="info"></div>       
+              
+        </div>
+ 
+           
+            
+        
+</body>
+</html>
+
+
+
+
+
+
+
+  

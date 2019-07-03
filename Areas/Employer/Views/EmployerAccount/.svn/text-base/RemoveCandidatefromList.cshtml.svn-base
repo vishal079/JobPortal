@@ -1,0 +1,31 @@
+﻿@using JobPortal.Web.Helpers
+@inherits MvcContrib.FluentHtml.ModelWebViewPage<JobPortal.Core.Domain.User.SendMail>
+@{
+    ViewBag.Title = "RamoveCandidateToMailList";
+}
+
+<div class="employerRightblock" id="MailtoAllCandidate" style="width: 270px;margin-left: 0px">
+    <table class="table table-hover table-striped table-bordered" style="width: 269px;padding-top: 5px;margin-bottom: 5px; margin-left: 1px">
+        <tr><td colspan="3">Mail to Candidates</td></tr>
+        @{
+            //var emailsStrings = new string[Model.To.Count];
+            TempData["emailAddress"] = Model.To;
+            for (int i = 0; i < Model.To.Count; i++)
+            {                         
+                <tr>
+                    <td>
+                        @{                                  
+                            var count = i + 1;            
+                            @count          
+                            //emailsStrings[i] = Model.To[i];      
+                        }                
+                    </td>
+                    <td>    @Html.DisplayFor(m => m.To[i])                     </td>
+                    <td>
+                        @Ajax.ImageActionLink("../../../../Content/themes/base/images/RemoveIcon.jpg",".", "RemoveCandidatefromList",new {email = Model.To[i]}, new AjaxOptions() {UpdateTargetId = "MailtoAllCandidate", HttpMethod = "GET"}, new {@class = "icon-remove"})
+                    </td>
+                </tr>                    
+            }                   
+         }
+    </table>
+</div>

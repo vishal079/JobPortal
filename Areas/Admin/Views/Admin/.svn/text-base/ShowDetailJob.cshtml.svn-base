@@ -1,0 +1,148 @@
+﻿
+@using JobPortal.Core;
+
+@inherits MvcContrib.FluentHtml.ModelWebViewPage<JobPortal.Areas.Admin.Models.AdminVM>
+                
+@{
+    ViewBag.Title = "ShowDetailJob";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div id="content">
+    @{
+        <div class=" employerHeader employerFont  Post-Padding "> <h3 class="span2">Detail Job </h3>@if(@Model.Job.Status==true){<p class="badge badge-success">This Job is Already Posted..</p>}else{<p class="badge badge-warning">This Job is Waiting for Your Responce..</p>}
+
+        </div>
+ 
+        <hr/>
+    
+        <div class="jobrequirment">
+            <div class="job_headmidleft"></div>
+            <div class="jobrequirment1" > Company Detail</div>
+            <div  class="job_headmidright" ></div>
+            <div class="jobrequirment2" >
+                <ul class="jobrequirment_bottom_mid2" >
+                    <li class="jobrequirment_bottom_mid1">
+                        <strong>Company Name:    </strong>
+                        <i> @Model.Job.Emplyer.CompanyName </i>
+                    </li>
+                               
+
+                    <li class="jobrequirment_bottom_mid1">
+                        <strong> Owner Name:    </strong>
+                        <i > @Model.Job.Emplyer.OwnerName    </i>
+                    </li>
+                                
+                                
+                    <li class="jobrequirment_bottom_mid1">
+                        <strong>Company Url:    </strong>
+                        <i > @Model.Job.Emplyer.CompanyUrl   </i>
+                    </li>
+                    <li class="jobrequirment_bottom_mid1">
+                        <strong>Posted Date:    </strong>
+                        <i>@Model.Job.PostedTime.GetValueOrDefault().ToShortDateString()</i>
+                    </li>
+                    <li class="jobrequirment_bottom_mid1">
+                        <strong>About Company:   </strong>
+                        <i>@Model.Job.Emplyer.AboutCompany</i>
+                    </li>
+                </ul>
+                     
+                <div class="clear"></div>
+            </div>
+            <div class="jobrequirment_bottom">
+                <div class="jobrequirment_bottom_left"></div>
+                <div class="jobrequirment_bottom_mid"></div>
+                <div class="jobrequirment_bottom_right"></div>
+            </div>
+        </div>
+     
+        <div class="jobrequirment"   >
+                    <div class="job_headmidleft"></div>
+                    <div class="jobrequirment1" > Job Detail</div>
+                    <div  class="job_headmidright" ></div>
+                    <div class="jobrequirment2" >
+                             <ul class="jobrequirment_bottom_mid2" >
+                           
+                                 <li class="jobrequirment_bottom_mid1">
+                                     <strong> Job title:    </strong>
+                                     <i> @Model.Job.JobTitle </i>
+                                 </li>
+                               
+
+                                 <li class="jobrequirment_bottom_mid1">
+                                     <strong> Require Experience: </strong>
+                                     <i > @Model.Job.RequiredExperiance   </i>
+                                 </li>
+                                
+                                
+                                 <li class="jobrequirment_bottom_mid1">
+                                     <strong>Key Technologies:    </strong>
+                                     <i > @Model.Job.KeyTerm   </i>
+                                 </li>
+                                 <li class="jobrequirment_bottom_mid1">
+                                     <strong>Telecommute:    </strong>
+                                     <i>@Model.Job.IsTelecommunicateJob</i>
+                                 </li>
+                                 <li class="jobrequirment_bottom_mid1">
+                                     <strong>Relocation:   </strong>
+                                     <i>@Model.Job.IsRelocationJob</i>
+                                 </li>
+                                  <li class="jobrequirment_bottom_mid1">
+                                     <strong>JobDiscription:   </strong>
+                                     <i>@Model.Job.SkillRequirement</i>
+                                 </li>
+                             </ul>
+                        
+                        <div class="clear"></div>
+                    </div>
+                    <div class="jobrequirment_bottom">
+                        <div class="jobrequirment_bottom_left"></div>
+                        <div class="jobrequirment_bottom_mid"></div>
+                        <div class="jobrequirment_bottom_right"></div>
+                    </div>
+                </div>
+     
+        <div class="jobrequirment"   >
+            <div class="job_headmidleft"></div>
+            <div class="jobrequirment1" > Location Detail</div>
+            <div  class="job_headmidright" ></div>
+            <div class="jobrequirment2" >
+                <ul class="jobrequirment_bottom_mid2" >
+                           
+                    <li class="jobrequirment_bottom_mid1">
+                        <strong> Country:    </strong>
+                        <i> @Model.Job.Country </i>
+                    </li>
+                               
+
+                    <li class="jobrequirment_bottom_mid1">
+                        <strong> State: </strong>
+                        <i > @Model.Job.State   </i>
+                    </li>
+                                
+                                
+                    <li class="jobrequirment_bottom_mid1">
+                        <strong>city:    </strong>
+                        <i > @Model.Job.City   </i>
+                    </li>
+                                 
+                </ul>
+                        
+                <div class="clear"></div>
+            </div>
+            <div class="jobrequirment_bottom">
+                <div class="jobrequirment_bottom_left"></div>
+                <div class="jobrequirment_bottom_mid"></div>
+                <div class="jobrequirment_bottom_right"></div>
+            </div>
+        </div>
+      @Html.ActionLink("ok", "GetJob", new { area = "Admin", Controller = "Admin" }, new { @class = "btn btn-primary" })
+      @Html.ActionLink("Delete","DeleteJob",new{Id=@Model.Job.Id},new {@class="btn btn-primary"})  
+        
+    }
+    <div id="info">
+    </div>  
+</div>

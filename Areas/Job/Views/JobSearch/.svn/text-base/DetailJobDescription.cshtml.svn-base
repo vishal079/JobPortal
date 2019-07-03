@@ -1,0 +1,78 @@
+﻿
+@inherits MvcContrib.FluentHtml.ModelWebViewPage<JobPortal.Areas.Job.Models.JobSearchVM>
+
+<table class="tb" border="0">
+@{
+        <tr>
+            <td> <p><a href="job">@Model.Job.JobTitle (@Model.Job.Emplyer.CompanyName)</a></p> </td> 
+        </tr>
+        <tr>
+            <td class="tbcity" >@Model.Job.Country , @Model.Job.State , @Model.Job.City </td>
+        </tr>
+        <tr>
+            @{
+                
+               string key = null;
+               int a = 0;
+               int len = Model.Job.KeyTerm.Length;
+               <td colspan="2">
+               @do
+               {
+                    if (Model.Job.KeyTerm[a].Equals(' ') || a == Model.Job.KeyTerm.Length)
+                    {
+                        <a href="#" class="btn btn-mini btn-primary"> @key </a>
+                        key = null;
+                    }
+                    else
+                    {
+                        key = key + Model.Job.KeyTerm[a];
+                    }
+                    a++;
+                    len--;
+               } while (len != 0);
+                <a href="../../Areas/Search/Views/JobSearch/Index.cshtml" class="btn btn-mini btn-primary"> @key</a>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td class="JobDetailFont">
+                <hr/>Job Description
+            </td>
+        </tr>
+        <tr>
+            <td class="tbcity">@Model.Job.JobDescription</td>
+        </tr>
+        <tr>
+            <td class="JobDetailFont">
+                <hr/>Skill & Requirement
+            </td>
+        </tr>
+        <tr>
+            <td class="tbcity">@Model.Job.SkillRequirement</td>
+        </tr>
+        <tr>
+            <td class="JobDetailFont">
+                <hr/>AboutCompany
+            </td>
+        </tr>
+        <tr>
+            <td class="tbcity">@Model.Job.Emplyer.AboutCompany</td>
+        </tr>
+        <tr style="color: lightgreen">
+            @{
+                if(Model.Job.IsTelecommunicateJob == true)
+                {
+                    <td> <hr/>This is Telecommnunicate job</td>
+                }
+            }
+        </tr>
+        <tr style="color: lightgreen">
+            @{
+                if(Model.Job.IsRelocationJob == true)
+                {
+                    <td> <hr/>This is Relocation Job</td>
+                }
+            }
+        </tr>
+    }
+</table>

@@ -1,0 +1,270 @@
+﻿@using JobPortal.Core
+@using JobPortal.Web.Helpers
+@using MvcContrib.FluentHtml
+@using System.Web.Security
+
+<html>
+<head>
+    <title></title>
+    <script type="text/javascript">
+        function AddJob(jobId, jobTitle, companyName) {
+            $.ajax({
+                url: '@Url.Action("FavJob", "JobSearch")',
+                    type: "POST",
+                    data: { 'jid': jobId, 'jobTitle': jobTitle, 'company': companyName },
+                    success: function (result) {
+                        $('#FavoriteJobs').html(result);
+                    }
+                });
+            }
+            function RemoveJob(jobId) {
+                $.ajax({
+                    url: '@Url.Action("RemoveFavoriteJob", "JobSearch")',
+                            type: "POST",
+                            data: { 'jobId': jobId, 'removeType': false },
+                            success: function (result) {
+                                $('#FavoriteJobs').html(result);
+                            }
+                        });
+                    }
+                    $(function () {
+                        $('.home').click(function () {
+                            if ($(this).hasClass("home")) {
+                                $(this).removeClass("home").addClass("home1");
+                                ;
+                                AddJob(this.id, this.value, this.alt);
+                            } else {
+                                $(this).removeClass("home1").addClass("home");
+                                RemoveJob(this.id);
+                            }
+                        });
+                    });
+
+                    $(function () {
+                        $('.home1').click(function () {
+                            if ($(this).hasClass("home1")) {
+                                $(this).removeClass("home1").addClass("home");;
+                                RemoveJob(this.id);
+                            }
+                            else {
+                                $(this).removeClass("home").addClass("home1");
+                                AddJob(this.id, this.value, this.alt);
+                            }
+                        });
+                    });
+
+        @*var co = 0;
+            function changeImage(id, jobId)
+                    {
+                        var a = document.getElementById("changeandimage " + id.toString());
+                        var fav = document.getElementById("faverite");
+                        var data = document.getElementById("data " + id.toString());
+
+                        if (a.alt == "E") {
+                            a.src = "@Url.Content("~/Content/themes/base/images/filledstar.png")";
+                            a.alt = "F";
+                            co++;
+                    
+                            alert(jobId);
+                            $.ajax({
+                                url: '@Url.Action("FavJob", "JobSearch")',
+                                type: "POST",
+                                data: { 'jid': jobId, 'jobTitle': jobTitle, 'company': companyName },
+                                UpdateTargetId: "FavoriteJobs"
+                        });
+                    }
+                else {
+                    a.src = "@Url.Content("~/Content/themes/base/images/emptystar.png")";
+                    a.alt = "E";
+                    co--;
+                }
+                fav.innerHTML = co.toString();
+            }*@
+    </script>
+</head>
+<body>
+    <div id="DetailUpdate">
+        <div id="blocks">
+            <div class="block">
+                <table class="tbtitle">
+                    <tr>
+                        <td>
+                            @*<h4>@Model.Job.TotalRecord Jobs   </h4>*@
+                        </td>
+                        <td id="div_loading" style="display: none; text-align: right; padding-right: 15px">
+                            <h4 style="color: White;">Loading, please wait...<img src="../../../../Content/themes/base/images/ajax-loading.gif" style="height: 25px; width: 25px" />
+                            </h4>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <table class="tb" style="width: 650px">
+                <tr>
+                    <td>
+                    @model JobPortal.Areas.Job.Models.JobSearchVM    
+                @if (Model != null)
+                {
+                    int i = 0;
+                    foreach (Job search in Model.Jobs)
+                    {
+                        i++;                   
+                    <tr>
+                        @if (Request.IsAuthenticated)
+                        {
+                            <td style="width: 20px">
+                                @{
+                            bool has = Model.FavJobs.Any(cus => cus.Job.Id.ToString() == search.Id.ToString());
+                                }
+                                @if (has == true)
+                                {
+                                    <input type="image" name="@search.Id" id="@search.Id" class="home1" alt="E"/>
+                                }
+                                else
+                                {
+                                    <input type="image" name="@search.Id" id="@search.Id" value="@search.JobTitle" class="home" alt="@search.Emplyer.CompanyName"/>
+                                }
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                <a href="@Url.Action("Login", "Home", new { Area = "", Controller = "Home" })">
+                                    <img src="@Url.Content("~/Content/themes/base/images/emptystar.png")"/></a>
+                            </td>
+                        }
+                        <td style="width:350px" id="data @i.ToString()" title="@search.JobTitle">@Html.ActionLink(search.JobTitle, "JobDetail", new { Id = search.Id })  (@search.Emplyer.CompanyName)</td>
+                        <td class="tbcity">@search.RequiredExperiance Years Experiance</td>
+                        @{
+                        if (search.PostedTime != null)
+                        {
+                            int elapsYears = DateTime.Now.Year - search.PostedTime.Value.Year;
+                            int elapaMonths = DateTime.Now.Month - search.PostedTime.Value.Month;
+                            int elapsDays = DateTime.Now.Day - search.PostedTime.Value.Day;
+                            if (elapsYears > 0)
+                            {
+                            <td class="tbcity">@elapsYears YearAgo</td>
+                            }
+                            else if (elapaMonths > 0)
+                            {
+                            <td class="tbcity">@elapaMonths MonthAgo</td>
+                            }
+                            else if (elapsDays > 0)
+                            {
+                            <td class="tbcity">@elapsDays DayAgo</td>
+                            }
+                        }
+                        }
+                    </tr>    
+                    <td>&nbsp;</td>
+                    <td class="tbcity" colspan="3">@search.Country,@search.State (@search.City)
+                                @if (@search.IsTelecommunicateJob == true)
+                                {                
+                                    <html>[Telecommunicate]</html>            
+                                }
+                        @if (@search.IsRelocationJob == true)
+                        {
+                            <html>[Relocation]</html>    
+                        }
+                    </td>                
+                    <tr>
+                        <td>
+                            <br />
+                            <br />
+                            <br />
+                        </td>
+                        <td colspan="3">
+                            @{                
+                        int length = search.JobDescription.Length;
+                        string jobdesc = null;
+                        for (int c = 0; c < 100; c++)
+                        {
+                            if (c < length && c != 99)
+                            {
+                                jobdesc = jobdesc + search.JobDescription[c];
+                            }
+                            else
+                            {                
+                                <a class="tbcity">@jobdesc ....</a>
+                                break;
+                            }
+                        }               
+                            }
+                        </td>
+                    </tr>                
+                    <tr>
+                        <td>&nbsp;</td>
+                        @{
+                           
+                        string key = null;
+                        int a = 0;
+                        int len = search.KeyTerm.Length;    
+                            <td colspan="1">
+                                @do
+                                {
+                                    if (search.KeyTerm[a].Equals(' ') || a == search.KeyTerm.Length || search.KeyTerm[a].Equals(','))
+                                    {                
+                                    <html>&nbsp;</html>@Html.ActionLink("" + key, "SearchOnKeyterm", new { id = key }, new { @class = "btn btn-mini btn-primary" })                
+                                        key = null;
+                                    }
+                                    else
+                                    {
+                                        key = key + search.KeyTerm[a];
+                                    }
+                                    a++;
+                                    len--;
+                                } while (len != 0);
+
+                                @Html.ActionLink("" + key, "SearchOnKeyterm", new { id = key }, new { @class = "btn btn-mini btn-primary" })
+                            </td>           
+                        }
+                        <td class="pull-left">
+                            <a class="btn btn-mini btn-primary" href="@Url.Action("Test", "JobApply", new { jobId = search.Id, companyName = search.Emplyer.CompanyName })" data-target="#EditCandidate" data-toggle="modal">Apply now
+                            </a>
+                        </td>
+                    </tr>                  
+                    <tr>
+                        <td></td>
+                        <td colspan="3">
+                            <hr />
+                        </td>
+                    </tr>
+               
+                    }
+                }
+    
+@*@Html.Partial("Detail") </td></tr>
+                <tr><td colspan="3">       </td></tr>*@
+            </table>
+            @Html.Partial("PageIndex", Model)
+        </div>
+    </div>
+</body>
+</html>
+@using (Html.BeginForm("ApplyJob", "JobApply", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div id="EditCandidate" class="modal fade hide" tabindex="-1" role="dialog" aria-labelledby="EditCandidateLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="EditCandidateLabel">Applay Job</h3>
+        </div>
+        <div class="modal-body">
+        </div>
+        <div class="modal-footer">
+            @this.SubmitButton("Save").Class("btn btn-primary")
+            @this.Button("Close").Class("btn").Attr("data-dismiss", "modal").Attr("aria-hidden", "true")
+        </div>
+
+    </div>
+}
+<script type="text/javascript">
+    $("a[data-target=#EditCandidate]").click(function (ev) {
+        ev.preventDefault();
+        var target = $(this).attr("href");
+
+        // load the url and show modal on success
+        $("#EditCandidate .modal-body").load(target, function () {
+            $("#EditCandidate").modal("show");
+        });
+    });
+</script>
+

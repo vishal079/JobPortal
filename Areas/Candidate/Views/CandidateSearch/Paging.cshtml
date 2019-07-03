@@ -1,0 +1,61 @@
+﻿@using JobPortal.Core
+
+@inherits MvcContrib.FluentHtml.ModelWebViewPage<JobPortal.Web.CandidateSearchModel>
+@{
+    Html.EnableUnobtrusiveJavaScript(false);      
+ }         
+@{
+    using (Html.BeginForm("CandidateList", "CandidateSearch", FormMethod.Post))
+    {
+        int currentPage = Model.AddPersonal.PageIndex;
+        int totalRecords = Model.AddPersonal.TotalRecord;
+        
+        string key = Model.AddPersonal.Skill.SkillTerm;
+        string loc = Model.AddPersonal.City;
+
+        string intrestArea = Model.AddPersonal.Experience.FunctionalArea;
+        string minExp = Model.AddPersonal.Experience.ExpYear;
+        
+        
+        
+        <list>
+            @if (currentPage > 0)
+            {
+                @Ajax.ActionLink("Prev", "Paging", "CandidateSearch",new{id = currentPage - 1, what = key, where = loc ,
+                    
+                funArea=intrestArea,minimumExp=minExp },
+                    
+                new AjaxOptions() { UpdateTargetId="LefttoRight",  HttpMethod="GET"},new{@class = "btn"})<html>&nbsp;</html>
+                
+               
+            }
+            @for (int i = 1; i < totalRecords/5 + 1; i++)
+            {
+                if (currentPage == i - 1)
+                {
+                    @Html.ActionLink(""+i,"Paging","CandidateSearch",new {disable = "disable"},new{@class = "btn",@title = "You are on same page" ,onclick = "javascript:return false;" ,style="background: darkorange"})<html>&nbsp;</html>
+                }
+                else
+                {
+                    @Ajax.ActionLink("" + i, "Paging", "CandidateSearch",new{id = i - 1, what = key, where = loc ,
+                    
+                     funArea=intrestArea,minimumExp=minExp},
+                    
+                    new AjaxOptions() { UpdateTargetId="LefttoRight",  HttpMethod="GET"},new{@class = "btn",id="button"}) <html>&nbsp;</html>
+                    
+                 
+                }
+            }
+            @if (totalRecords > (currentPage + 1) * 5)
+            {
+                    @Ajax.ActionLink("Next", "Paging", "CandidateSearch",new{id = currentPage + 1, what = key, where = loc ,
+                    
+                    funArea=intrestArea,minimumExp=minExp },
+                    
+                    new AjaxOptions() { UpdateTargetId="LefttoRight",  HttpMethod="GET"},new{@class = "btn"})<html>&nbsp;</html>
+                
+                    
+            }
+        </list>
+    }
+}

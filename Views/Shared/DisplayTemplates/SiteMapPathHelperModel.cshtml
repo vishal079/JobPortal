@@ -1,0 +1,17 @@
+﻿@model SiteMapPathHelperModel
+@using System.Web.Mvc.Html
+@using System.Linq
+
+<ul class="breadcrumb">
+    @foreach (var node in Model)
+    { 
+    
+        <li>
+        @Html.DisplayFor(m => node)
+        @if (node != Model.Last())
+        {
+            <span class="divider">/</span>
+        }
+        </li>
+    }
+</ul>

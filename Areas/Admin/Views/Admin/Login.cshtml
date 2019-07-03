@@ -1,0 +1,68 @@
+﻿@*@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Login</h2>*@
+
+@inherits MvcContrib.FluentHtml.ModelWebViewPage<JobPortal.Areas.Admin.Models.AdminVM>
+@{
+    ViewBag.Title = "Admin Login";
+    Layout = "../Shared/_LoginLayout.cshtml";
+    Html.EnableUnobtrusiveJavaScript(true);
+}
+
+<div id="content">
+    @*@Html.ValidationSummary(true, "Login was unsuccessful. Please correct the errors and try again.")   *@
+        @using (Html.BeginForm("Login", "Admin", FormMethod.Post))
+        {
+            @Html.ValidationSummary(true)          
+            //var user = new User();
+            <fieldset>
+                <legend class="Post-Padding">Admin Login</legend>
+                <div class="Post-Padding">
+                    <div class="editor-label">
+                        @Html.LabelFor(m => m.model.UserName)
+                    </div>
+                    <div class="editor-label">
+                        @Html.TextBoxFor(m => m.model.UserName)
+                        @Html.ValidationMessageFor(m => m.model.UserName)
+                    </div>
+                    <div class="editor-label">
+                        @Html.LabelFor(m => m.model.Password)
+                    </div>
+                    <div class="editor-label">
+                        @Html.PasswordFor(m => m.model.Password)
+                        @Html.ValidationMessageFor(m => m.model.Password)
+                    </div>
+
+                    <div><a href="#myModal" data-toggle="modal">Forgot Password</a></div>
+                    <p style="padding-top: 20px;">
+                        <input type="submit" value="Sign-in" class="btn btn-primary" />
+                        <input type="button" value="Cancel" class="btn btn-primary" />
+                    </p>
+                </div>
+            </fieldset>
+        }
+    <div id="info">
+    </div>
+</div>
+
+@using (Html.BeginForm("ForgotPassword", "Admin", FormMethod.Post))
+{
+    <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">Forgot Password</h3>
+        </div>
+        <div class="modal-body">
+            <div>
+                @Html.TextBoxFor(m => m.model.UserName)
+            </div>
+        </div>
+        <div class="modal-footer">
+            <input type="submit" value="submit" class="btn btn-primary" />
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+        </div>
+    </div>
+}

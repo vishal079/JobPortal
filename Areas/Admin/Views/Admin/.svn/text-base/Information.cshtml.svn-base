@@ -1,0 +1,34 @@
+﻿
+@inherits MvcContrib.FluentHtml.ModelWebViewPage<JobPortal.Areas.Admin.Models.AdminVM>
+
+@*@model JobPortal.Core.Login              *@
+
+@{
+    ViewBag.Title = "Information";
+ }
+<script>
+   
+</script>
+
+ <div class="navbar " style="font-size:15px;">
+  <div class="navbar-inner">
+    
+    <ul class="nav">
+        <li>
+            @Html.ActionLink("JobDetail","GetJob",new{area="Admin",Controller="Admin"},new {id="abc"})   
+            @*<a href="#">Job</a>*@
+        </li>
+        <li>
+            @Html.ActionLink("CandidateDetail","CandidateProfileList",new {area="Admin",Controller="Admin"},new {id="def"})
+            @*<a href="#"></a>*@
+        </li>
+        <li style="margin-left: 380px;">
+                
+            @Html.ActionLink("sign-out","CandidateProfileList",new {area="Admin",Controller="Admin"})
+        </li>
+ 
+</ul>
+  </div>
+</div>
+ 
+

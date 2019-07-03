@@ -1,0 +1,21 @@
+K 26
+svn:wc:ra_dav:activity-url
+V 24
+/svn/JobPortal/!svn/act/
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/JobPortal/!svn/ver/102/trunk/JobPortal/Areas/Employer/Controllers
+END
+EmployerAccountController.cs
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/JobPortal/!svn/ver/100/trunk/JobPortal/Areas/Employer/Controllers/EmployerAccountController.cs
+END
+EmployerMessageController.cs
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/JobPortal/!svn/ver/45/trunk/JobPortal/Areas/Employer/Controllers/EmployerMessageController.cs
+END

@@ -1,0 +1,112 @@
+﻿@using JobPortal.Core
+@inherits MvcContrib.FluentHtml.ModelWebViewPage<JobPortal.Web.CandidateSearchModel>
+@{
+    ViewBag.Title = "NewProfile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>NewProfile</h2>
+
+<html>
+ <head>
+  <title>
+  </title>
+
+ </head>
+
+    <body class="">
+        <div>
+              @using(Html.BeginForm("NewProfile","CandidateSearch",new{area="Employer",Controller="CandidateSearch"},FormMethod.Post))
+                    {
+                        <table>
+                            <tr>
+                                <td>
+                                    f name
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(model => model.AddCandidate1.Name)
+                                </td>   
+                            </tr>
+                            <tr>
+                                <td>
+                                    mobile
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(model => model.AddCandidate1.ContactNo)
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>
+                                    email
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(model => model.AddCandidate1.Email)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    DateOfBirth 
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(model => model.AddCandidate1.DateOfBirth)
+                                </td>
+                            </tr>
+                             <tr>
+                                <td>
+                                       skill
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(model => model.AddCandidate1.Skill)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Createon 
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(model => model.AddCandidate1.CreatedOn)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    updateon 
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(model => model.AddCandidate1.UpdatedOn)
+                                </td>
+                            </tr>
+                            
+                            
+                            <tr>
+                                <td>
+                                    location 
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(model => model.AddCandidate1.CurrentLocation)
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>
+                                    Male 
+                                    @Html.RadioButtonFor(model =>model.AddCandidate1.Gender,"male")
+                                </td>
+                                <td>
+                                    Female @Html.RadioButtonFor(model =>model.AddCandidate1.Gender,"female")
+                                </td>
+                            </tr>
+                               
+                            <tr>
+                                <td>
+                                    <input type="submit" name="create profile" value="submit" />
+                                </td>
+                            </tr>
+                   
+         
+                        </table>
+                    }      
+
+        </div>
+    </body>
+</html>
